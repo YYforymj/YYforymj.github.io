@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="以下内容为 The Redis Little Book 的学习笔记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Redis Little Book">
+<meta property="og:url" content="http://yoursite.com/2018/09/11/the little redis book/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="以下内容为 The Redis Little Book 的学习笔记。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-08T06:31:11.947Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Redis Little Book">
+<meta name="twitter:description" content="以下内容为 The Redis Little Book 的学习笔记。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/11/the little redis book/">
+
+
+
+
+
+  <title>The Redis Little Book | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/11/the little redis book/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">The Redis Little Book</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-11T20:28:30+08:00">
+                2018-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>以下内容为 The Redis Little Book 的学习笔记。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>选择数据库，选中编号为 number 的数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db: select（number）</span><br></pre></td></tr></table></figure>
+<p>key 组成形式： users:leto （可以理解为名为 leto 的用户，冒号为分隔符用于管理键值）</p>
+<p>存储值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set users:leto &apos;&#123;&quot;name&quot;: &quot;leto&quot;, &quot;planet&quot;: &quot;dune&quot;, &quot;likes&quot;: [&quot;spice&quot;]&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>获取值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get users:leto</span><br></pre></td></tr></table></figure>
+<p>操作的数据类型根据命令区分，不同的命令操作不同的数据类型。</p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ul>
+<li><p>Strings ：字符串，最常用类型</p>
+<p>存储</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set users:leto &apos;&#123;&quot;name&quot;: leto, &quot;planet&quot;: dune, &quot;likes&quot;: [&quot;spice&quot;]&#125;&apos;</span><br></pre></td></tr></table></figure>
+<p>获取长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">strlen users:leto</span><br><span class="line">(integer) 50</span><br></pre></td></tr></table></figure>
+<p>获取子字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getrange users:leto 31 48</span><br><span class="line">&quot;\&quot;likes\&quot;: [\&quot;spice\&quot;]&quot;</span><br></pre></td></tr></table></figure>
+<p>追加字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">append users:leto &quot; OVER 9000!!&quot;</span><br><span class="line">(integer) 62</span><br></pre></td></tr></table></figure>
+<p>如果字符串可以解析为数字，如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set number 1</span><br></pre></td></tr></table></figure>
+<p>可以直接对数字值进行操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">incr number</span><br><span class="line">(integer) 2</span><br><span class="line"></span><br><span class="line">incrby number 3</span><br><span class="line">(integer) 5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Hashes :比较接近类的概念</p>
+<p>存取、属性操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">hset users:goku powerlevel 9000</span><br><span class="line"></span><br><span class="line">hget users:goku powerlevel</span><br><span class="line">9000</span><br><span class="line"></span><br><span class="line">//一次设置多个属性</span><br><span class="line">hmset users:goku race saiyan age 737</span><br><span class="line"></span><br><span class="line">//一次获取多个属性</span><br><span class="line">hmget users:goku race powerlevel</span><br><span class="line">1) &quot;saiyan&quot;</span><br><span class="line">2) &quot;9000&quot;</span><br><span class="line"></span><br><span class="line">//获取所有属性与值</span><br><span class="line">hgetall users:goku</span><br><span class="line">1) &quot;powerlevel&quot;</span><br><span class="line">2) &quot;9000&quot;</span><br><span class="line">3) &quot;race&quot;</span><br><span class="line">4) &quot;saiyan&quot;</span><br><span class="line">5) &quot;age&quot;</span><br><span class="line">6) &quot;737&quot;</span><br><span class="line"></span><br><span class="line">//获取所有属性名称</span><br><span class="line">hkeys users:goku</span><br><span class="line">1) &quot;powerlevel&quot;</span><br><span class="line">2) &quot;race&quot;</span><br><span class="line">3) &quot;age&quot;</span><br><span class="line"></span><br><span class="line">//删除属性</span><br><span class="line">hdel users:goku age</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Lists: 类似于队列或者栈，可以 push、pop 操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lpush newusers goku</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Sets: 类似于 java 中的 set，存储不重复不排序的集合</p>
+<p>存储</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sadd friends:leto ghanima paul chani jessica</span><br><span class="line">sadd friends:duncan paul jessica alia</span><br></pre></td></tr></table></figure>
+<p>查询集合中是否存在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sismember friends:leto jessica</span><br><span class="line">(integer) 1//1为存在</span><br><span class="line"></span><br><span class="line">sismember friends:leto vladimir</span><br><span class="line">(integer) 0//0为不存在</span><br></pre></td></tr></table></figure>
+<p>查找交集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sinter friends:leto friends:duncan</span><br><span class="line">1) &quot;jessica&quot;</span><br><span class="line">2) &quot;paul&quot;</span><br></pre></td></tr></table></figure>
+<p>查找交集并存储</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sinterstore friends:leto_duncan friends:leto friends:duncan</span><br><span class="line">(integer) 2</span><br><span class="line"></span><br><span class="line">smembers friends:leto_duncan</span><br><span class="line">1) &quot;jessica&quot;</span><br><span class="line">2) &quot;paul&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Sorted Sets: 介于hashes 与 sets 之间的类型，相当于内部值附加有权值的sets</p>
+<p>存储</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zadd friends:duncan 70 ghanima 95 paul 95 chani 75 jessica 1 vladimir</span><br><span class="line">(integer) 5</span><br></pre></td></tr></table></figure>
+<p>获取区间内值的数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zcount friends:duncan 90 100</span><br><span class="line">(integer) 2</span><br></pre></td></tr></table></figure>
+<p>获取某个元素的排名（最高排名为0）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">zrevrank friends:duncan vladimir</span><br><span class="line">(integer) 4</span><br><span class="line"></span><br><span class="line">zrevrank friends:duncan paul</span><br><span class="line">(integer) 0</span><br><span class="line"></span><br><span class="line">zrevrank friends:duncan chani</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="使用数据结构"><a href="#使用数据结构" class="headerlink" title="使用数据结构"></a>使用数据结构</h2><ul>
+<li><p>利用 hash 进行伪多列索引，存储数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set users:9001 &apos;&#123;&quot;id&quot;: 9001, &quot;email&quot;: &quot;leto@dune.gov&quot;, ...&#125;&apos;</span><br><span class="line">hset users:lookup:email leto@dune.gov 9001</span><br></pre></td></tr></table></figure>
+<p>获取数据(Ruby)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">id = redis.hget(&apos;users:lookup:email&apos;, &apos;leto@dune.gov&apos;)</span><br><span class="line">user = redis.get(&quot;users:#&#123;id&#125;&quot;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pipeline 类似于批处理batch，在多条数据操作时能够提升效率</p>
+</li>
+<li><p>事务：redis 的命令都是原子操作（因为 redis 是单线程的）。、</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">multi</span><br><span class="line">hincrby groups:1percent balance -9000000000</span><br><span class="line">hincrby groups:99percent balance 9000000000</span><br><span class="line">exec</span><br></pre></td></tr></table></figure>
+<p>依次输入上述命令即实现了一个事务，关键命令为 <code>multi</code> 与 <code>exec</code>。事务开始的时候先向Redis服务器发送 MULTI 命令，然后依次发送需要在本次事务中处理的命令，最后再发送 EXEC 命令表示事务命令结束。当输入MULTI命令后，服务器返回OK表示事务开始成功，然后依次输入需要在本次事务中执行的所有命令，每次输入一个命令服务器并不会马上执行，而是返回”QUEUED”，这表示命令已经被服务器接受并且暂时保存起来，最后输入EXEC命令后，本次事务中的所有命令才会被依次执行。如果客户端在发送EXEC命令之前断线了，则服务器会清空事务队列，事务中的所有命令都不会被执行。而一旦客户端发送了EXEC命令之后，事务中的所有命令都会被执行，即使此后客户端断线也没关系，因为服务器已经保存了事务中的所有命令。</p>
+<p>事务错误处理：</p>
+<ul>
+<li><p><strong>语法错误</strong> 就像上面的例子一样，语法错误表示命令不存在或者参数错误<br>这种情况需要区分Redis的版本，Redis 2.6.5之前的版本会忽略错误的命令，执行其他正确的命令，2.6.5之后的版本会忽略这个事务中的所有命令，都不执行，就比如上面的例子(使用的Redis版本是2.8的)</p>
+</li>
+<li><p><strong>运行错误</strong> 运行错误表示命令在执行过程中出现错误，比如用GET命令获取一个散列表类型的键值。<br>这种错误在命令执行之前Redis是无法发现的，所以在事务里这样的命令会被Redis接受并执行。如果食物里有一条命令执行错误，其他命令依旧会执行（包括出错之后的命令）。</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<ol>
+<li>Redis服务端是个单线程的架构，不同的Client虽然看似可以同时保持连接，但发出去的命令是序列化执行的，这在通常的数据库理论下是最高级别的隔离</li>
+<li>用MULTI/EXEC 来把多个命令组装成一次发送，达到原子性</li>
+<li>用WATCH提供的乐观锁功能，在你EXEC的那一刻，如果被WATCH的键发生过改动，则MULTI到EXEC之间的指令全部不执行，不需要rollback</li>
+<li>其他回答中提到的DISCARD指令只是用来撤销EXEC之前被暂存的指令，并不是回滚</li>
+</ol>
+<p>作者：顾小宇<br>链接：<a href="https://www.zhihu.com/question/35949129/answer/81798934" target="_blank" rel="noopener">https://www.zhihu.com/question/35949129/answer/81798934</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+</blockquote>
+<h2 id="一些其他指令"><a href="#一些其他指令" class="headerlink" title="一些其他指令"></a>一些其他指令</h2><ul>
+<li><p>过期时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">expire pages:about 30  //30s后过期</span><br><span class="line">expireat pages:about 1356933600  //按照时间戳设置过期</span><br><span class="line">ttl pages:about //剩余过期时间</span><br><span class="line">persist pages:about //设置key取消过期</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发布与订阅</p>
+<p>先打开一个 redis client ，输入如下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">subscribe warnings //订阅消息</span><br><span class="line">//下面为输出</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) &quot;subscribe&quot;</span><br><span class="line">2) &quot;warnings&quot;</span><br><span class="line">3) (integer) 1</span><br></pre></td></tr></table></figure>
+<p>再打开另一个 redis client ，输入如下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">publish warnings &quot;it&apos;s over 9000!&quot; //发布消息</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<p>此时可以再第一个 client 中观察到如下输出，实现了发布订阅</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1) &quot;message&quot;</span><br><span class="line">2) &quot;warnings&quot;</span><br><span class="line">3) &quot;it&apos;s over 9000!&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>监控</p>
+<p>先打开一个 redis client ，输入如下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">monitor</span><br></pre></td></tr></table></figure>
+<p>再打开另一个 redis client ，输入如下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set my &quot;my own redis&quot;</span><br></pre></td></tr></table></figure>
+<p>第一个 client 中出现如下输出，实现了对 redis 的监控</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1536649818.773050 [0 127.0.0.1:56539] &quot;COMMAND&quot;</span><br><span class="line">1536649833.069995 [0 127.0.0.1:56539] &quot;set&quot; &quot;my&quot; &quot;my own redis&quot;</span><br></pre></td></tr></table></figure>
+<p>慢日志</p>
+<p>redis的slow log记录了那些执行时间超过规定时长的请求。执行时间不包括I/O操作（比如与客户端进行网络通信等），只是命令的实际执行时间（期间线程会被阻塞，无法服务于其它请求）。<br>有两个参数用于配置slow log： </p>
+<ul>
+<li>slowlog-log-slower-than：设定执行时间，单位是毫秒，执行时长超过该时间的命令将会被记入log。-1表示不记录slow log; 0强制记录所有命令。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config set slowlog-log-slower-than 0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>slowlog-max-len：slow log的长度。最小值为0。如果日志队列已超出最大长度，则最早的记录会被从队列中清除。<br>可以通过编辑redis.conf文件配置以上两个参数。对运行中的redis, 可以通过config get, config set命令动态改变上述两个参数</li>
+</ul>
+<p>slow log是记录在内存中的，所以即使你记录所有的命令（将slowlog-log-slower-than设为0），对性能的影响也很小。 </p>
+<ul>
+<li>slowlog get: 列出所有slow log </li>
+<li>slowlog get N:列出最近N条slow log</li>
+</ul>
+</li>
+<li><p>排序</p>
+<p>对 list 进行排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush users:leto:guesses 5 9 10 2 4 10 19 2</span><br><span class="line">(integer) 8</span><br><span class="line">127.0.0.1:6379&gt; sort users:leto:guesses</span><br><span class="line">1) &quot;2&quot;</span><br><span class="line">2) &quot;2&quot;</span><br><span class="line">3) &quot;4&quot;</span><br><span class="line">4) &quot;5&quot;</span><br><span class="line">5) &quot;9&quot;</span><br><span class="line">6) &quot;10&quot;</span><br><span class="line">7) &quot;10&quot;</span><br><span class="line">8) &quot;19&quot;</span><br></pre></td></tr></table></figure>
+<p>值得注意的是，sort 仅仅是对数据排序后进行输出，原数据的顺序并没有被修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lrange  users:leto:guesses 0 -1</span><br><span class="line">1) &quot;5&quot;</span><br><span class="line">2) &quot;9&quot;</span><br><span class="line">3) &quot;10&quot;</span><br><span class="line">4) &quot;2&quot;</span><br><span class="line">5) &quot;4&quot;</span><br><span class="line">6) &quot;10&quot;</span><br><span class="line">7) &quot;19&quot;</span><br><span class="line">8) &quot;2&quot;</span><br></pre></td></tr></table></figure>
+<p>set 按照字母表排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd friends:ghanima leto paul chani jessica alia duncan</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; sort friends:ghanima limit 0 3 desc alpha</span><br><span class="line">1) &quot;paul&quot;</span><br><span class="line">2) &quot;leto&quot; </span><br><span class="line">3) &quot;jessica&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="权限与管理"><a href="#权限与管理" class="headerlink" title="权限与管理"></a>权限与管理</h2><ul>
+<li><p>redis 的配置文件是 redis.conf</p>
+</li>
+<li><p>redis提供了一个轻量级的认证方式，可以编辑redis.conf配置来启用认证。修改 redis.conf 去掉requirepass前的注释，并修改密码为所需的密码，这个时候尝试登录redis，发现可以登上，但是执行具体命令是提示操作不允许。</p>
+</li>
+<li><p>也可以通过命令行配置密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379[1]&gt; config set requirepass my_redis</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>但是命令行配置的密码仅限于此次 redis 运行期间使用，如果重启一下redis，则依旧使用 redis.conf 中密码鉴权。</p>
+</li>
+<li><p>危险命令重命名：</p>
+<p>对于 flushdb 、config 等重要命令，可以使用重命名来加强安全等级。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename-command FLUSHALL joYAPNXRPmcarcR4ZDgC81TbdkSmLAzRPmcarcR</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最大内存设置</p>
+<p>打开redis配置文件，找到如下段落，设置maxmemory参数，maxmemory是bytes字节类型，注意转换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># In short... if you have slaves attached it is suggested that you set a lower</span><br><span class="line"># limit for maxmemory so that there is some free RAM on the system for slave</span><br><span class="line"># output buffers (but this is not needed if the policy is &apos;noeviction&apos;).</span><br><span class="line">#</span><br><span class="line"># maxmemory &lt;bytes&gt;</span><br><span class="line">maxmemory 268435456</span><br></pre></td></tr></table></figure>
+<p>当 redis 使用内存超过设置的最大值时，会报 out of memeory 异常。通常来讲实际内存达到最大内存的 3/4 时就要考虑加大内存。另外，使用 info 指令可以查看当前内存使用情况。</p>
+</li>
+<li><p>主从复制</p>
+<p>redis的复制功能是支持多个数据库之间的数据同步。一类是主数据库（master）一类是从数据库（slave），主数据库可以进行读写操作，当发生写操作的时候自动将数据同步到从数据库，而从数据库一般是只读的，并接收主数据库同步过来的数据，一个主数据库可以有多个从数据库，而一个从数据库只能有一个主数据库。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/10/java利用redis sorted set 对数据进行排序/" rel="next" title="java利用 redis sorted set 对数据进行排序">
+                <i class="fa fa-chevron-left"></i> java利用 redis sorted set 对数据进行排序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/11/使用maven部署构件至nexus/" rel="prev" title="使用 maven 部署构件至 nexus">
+                使用 maven 部署构件至 nexus <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构"><span class="nav-number">2.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用数据结构"><span class="nav-number">3.</span> <span class="nav-text">使用数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些其他指令"><span class="nav-number">4.</span> <span class="nav-text">一些其他指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限与管理"><span class="nav-number">5.</span> <span class="nav-text">权限与管理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

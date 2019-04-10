@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="以下内容为传智博客的《java基础入门》一书的读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java基础02">
+<meta property="og:url" content="http://yoursite.com/2017/04/01/java02/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="以下内容为传智博客的《java基础入门》一书的读书笔记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/java02/Exception.png">
+<meta property="og:updated_time" content="2019-04-08T06:31:11.926Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java基础02">
+<meta name="twitter:description" content="以下内容为传智博客的《java基础入门》一书的读书笔记">
+<meta name="twitter:image" content="http://yoursite.com/images/java02/Exception.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/01/java02/">
+
+
+
+
+
+  <title>java基础02 | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/01/java02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java基础02</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T14:32:03+08:00">
+                2017-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>以下内容为传智博客的《java基础入门》一书的读书笔记</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><ul>
+<li>final修饰的类不可继承，方法不可重写，标识符为常量</li>
+<li>包含抽象方法的类必须为抽象类，接口中方法默认使用public abstract修饰，变量默认使用public static final修饰。抽象类中可以有非抽象方法，但必须包含抽象方法。</li>
+<li>接口可以通过匿名内部类的方式直接实例化，且接口支持多重继承，java的多重继承也是通过接口实现的（java的类不支持多重继承）</li>
+<li>instanceof 用于判断一个对象是否是一个接口或一个类的实例或子实例</li>
+<li><p>匿名内部类的实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">interface Animal&#123;</span><br><span class="line">    void shout();</span><br><span class="line">&#125;</span><br><span class="line">public class cat&#123;</span><br><span class="line">    public static void main(String[] args)&#123;</span><br><span class="line">        animalShout(new Animal()&#123;</span><br><span class="line">           public void shout()&#123;</span><br><span class="line">                System.out.println(&quot;miao&quot;);</span><br><span class="line">           &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">   &#125;</span><br><span class="line">    public static void animalShout(Animal an)&#123;</span><br><span class="line">        an.shout();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>异常<br><img src="\images\java02\Exception.png" alt="Exception"><br>Error是程序无法处理的错误，比如OutOfMemoryError、ThreadDeath等。这些异常发生时，Java虚拟机（JVM）一般会选择线程终止。<br>Exception是程序本身可以处理的异常，这种异常分两大类运行时异常和非运行时异常。程序中应当尽可能去处理这些异常。</p>
+</li>
+<li>异常的捕获：使用try catch捕获<br>finally的理解：try…catch后无论发生异常还是return退出，finally块中的语句都会执行，如果如turn返回了值而finally也返回了值，则finally中的返回值覆盖之前的返回值，之前的返回值无效</li>
+<li>throw与throws的区别：throws用于抛出方法产生的异常，在方法声明处使用；throw用于抛出自定义异常，在方法内使用</li>
+<li>java常用包：<br>java.lang包含String,Math,System,Thread等核心类；<br>java.util包含工具类，集合类</li>
+<li>访问控制：<br>public：任意类访问（公共访问）<br>protected：只能被同包或不同包的子类访问（子类访问）<br>default：只能被同包的类访问（包访问）<br>private：只能被该类其他成员访问（类访问）</li>
+<li>静态导包：一个包中某个类的方法全部为static，可以静态导入。例子：import static packagename;</li>
+<li>自定义异常 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class DivideByMinusException extends Exception&#123;</span><br><span class="line">	public DivideByMinusException()&#123;</span><br><span class="line">		super();</span><br><span class="line">	&#125;</span><br><span class="line">	public DivideByMinusException(String msg)&#123;</span><br><span class="line">		super(msg);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">public class ExceptionDemo&#123;</span><br><span class="line">	public static void main(String[] args)&#123;</span><br><span class="line">		int res = divide(4,-2);</span><br><span class="line">		System.out.println(res);</span><br><span class="line">	&#125;</span><br><span class="line">	public static int divide(int a,int b)&#123;</span><br><span class="line">		if(b &lt; 0)&#123;</span><br><span class="line">			throw new DivideByMinusException(&quot;Divide by minus number!&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">		return a/b;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="第五章"><a href="#第五章" class="headerlink" title="第五章"></a>第五章</h2><ul>
+<li>多线程的两种实现方式：</li>
+</ul>
+<ol>
+<li>继承Thread类，覆写run()方法，在run()中实现线程</li>
+<li>实现Runnable接口</li>
+</ol>
+<ul>
+<li><p>继承Thread类实现多线程，需要注意的是，run()方法不会启动新县城，start()方法才会启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Demo1&#123;</span><br><span class="line">	public static void main(String[] args)&#123;</span><br><span class="line">		MyThread my = new MyThread();</span><br><span class="line">		my.start();</span><br><span class="line">		while(true)&#123;</span><br><span class="line">			System.out.println(&quot;main thread is running&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class MyThread extends Thread&#123;</span><br><span class="line">	public void run()&#123;</span><br><span class="line">		while(true)&#123;</span><br><span class="line">			System.out.println(&quot;my thread is running&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现Runnable接口创建多线程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class Demo2&#123;</span><br><span class="line">	public static void main(String[] args)&#123;</span><br><span class="line">		MyThread  my = new MyThread();</span><br><span class="line">		Thread thread = new Thread(my);</span><br><span class="line">		thread.start();</span><br><span class="line">		while(true)&#123;</span><br><span class="line">			System.out.println(&quot;main thread is running&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class MyThread implements Runnable&#123;</span><br><span class="line">	public void run()&#123;</span><br><span class="line">		while(true)&#123;</span><br><span class="line">			System.out.println(&quot;my thread is running&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>两种方式的比较：<br>由于java的单继承特性，继承Thread类后无法继承其他类，故通常用实现Runnable接口方法；使用Runnable接口可以使得多线程共享资源（在Runnable实现类中实现共享资源）；</p>
+</li>
+<li>后台线程：<br>通过setDemon(true)实现，且需要在start()方法调用前使用；isDemon()可以判断后台线程；前台进程全部结束后，JVM会在一定时间内杀死全部后台进程</li>
+<li>线程的五种状态：新建、就绪、运行、阻塞、死亡<br>死亡状态的条件：run()执行完成或者发生Exception/Error；</li>
+<li>线程优先级分为1-10级，数字越大优先级越高（MAX:10;NORM:5;MIN:1;）；main方法的优先级默认为5；Thread类的setPriority(int Priority)可以设置优先级；</li>
+<li>sleep()方法执行完成后线程为就绪状态；yield()方法会将线程置于就绪状态；join()实现线程插队，即线程一调用线程而的join()方法，则线程一就会在线程二执行结束后执行；wait()方法使当前线程房企同步锁并等待，知道其他进程进入该锁并唤醒；notify()唤醒第一个wait()的线程；notifyAll()唤醒全部wait()的线程</li>
+<li>同步关键字synchronized：同步代码块的锁是任意对象，该对象要提前声明；同步方法的锁是调用该方法的对象，静态同步方法的锁是该方法所在类的类对象（Class），可以用“类名.class”获取</li>
+<li>死锁产生的四个必要条件</li>
+</ul>
+<ol>
+<li>互斥条件：一个资源每次只能被一个线程使用</li>
+<li>请求与保持条件：一个线程因请求资源而被阻塞时，对于该线程已经获得的资源不释放</li>
+<li>不剥夺条件：线程已经获得的资源在未使用完成前不会被强制剥夺</li>
+<li>循环条件：若干进程间形成头尾循环等待资源关系<br>死锁实例<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class Deadlocker&#123;  </span><br><span class="line">	int field_1;  </span><br><span class="line">	private Object lock_1 = new int[1];  </span><br><span class="line">	int field_2;  </span><br><span class="line">	private Object lock_2 = new int[1];  </span><br><span class="line">	</span><br><span class="line">	public void method1(int value)&#123;  </span><br><span class="line">		“synchronized” (lock_1)&#123;  </span><br><span class="line">			“synchronized” (lock_2)&#123;  </span><br><span class="line">			field_1 = 0; field_2 = 0;  </span><br><span class="line">		   &#125;  </span><br><span class="line">		&#125;</span><br><span class="line">	  &#125;  </span><br><span class="line">  </span><br><span class="line">	public void method2(int value)&#123;  </span><br><span class="line">		“synchronized” (lock_2)&#123;  </span><br><span class="line">			“synchronized” (lock_1)&#123;  </span><br><span class="line">			field_1 = 0; field_2 = 0;  </span><br><span class="line">			&#125;  </span><br><span class="line">		&#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>上例中考虑如下现象<br>一个线程（ThreadA）调用method1(),ThreadA在lock_1上同步，但允许被抢先执行。<br>另一个线程（ThreadB）开始执行,ThreadB调用method2()。<br>ThreadB获得lock_2，继续执行，企图获得lock_1,但ThreadB不能获得lock_1，因为ThreadA占有lock_1,ThreadB阻塞。<br>现在轮到ThreadA继续执行。ThreadA试图获得lock_2，但不能成功，因为lock_2已经被ThreadB占有了,ThreadA和ThreadB都被阻塞，程序死锁。</p>
+<h2 id="第六章"><a href="#第六章" class="headerlink" title="第六章"></a>第六章</h2><ul>
+<li>StringBuffer没有覆写equals方法，不能用+连接，连接要用append()方法；</li>
+<li>包装类：使用valueof()返回包装类的值（int或String）；parseInt(Stirng s)将字符串参数作为有符号的十进制整数进行解析；</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/10/java01/" rel="next" title="java基础01">
+                <i class="fa fa-chevron-left"></i> java基础01
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/01/java03/" rel="prev" title="java基础03">
+                java基础03 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章"><span class="nav-number">1.</span> <span class="nav-text">第四章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五章"><span class="nav-number">2.</span> <span class="nav-text">第五章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六章"><span class="nav-number">3.</span> <span class="nav-text">第六章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

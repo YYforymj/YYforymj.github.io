@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="接下来会进行 jdk 源码的阅读，此文作为阅读源码的顺序参考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java源码阅读顺序">
+<meta property="og:url" content="http://yoursite.com/2018/10/08/java源码阅读顺序/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="接下来会进行 jdk 源码的阅读，此文作为阅读源码的顺序参考">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-08T06:31:11.940Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java源码阅读顺序">
+<meta name="twitter:description" content="接下来会进行 jdk 源码的阅读，此文作为阅读源码的顺序参考">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/08/java源码阅读顺序/">
+
+
+
+
+
+  <title>java源码阅读顺序 | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/08/java源码阅读顺序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java源码阅读顺序</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-08T11:57:39+08:00">
+                2018-10-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk/" itemprop="url" rel="index">
+                    <span itemprop="name">jdk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>接下来会进行 jdk 源码的阅读，此文作为阅读源码的顺序参考</p>
+</blockquote>
+<a id="more"></a>
+<p>很多java开发的小伙伴都会阅读jdk源码，然而确不知道应该从哪读起。以下为小编整理的通常所需阅读的源码范围。<br>标题为包名，后面序号为优先级1-4，优先级递减<br>一、java.lang</p>
+<ol>
+<li>Object 1</li>
+<li>String 1</li>
+<li>AbstractStringBuilder 1</li>
+<li>StringBuffer 1</li>
+<li>StringBuilder 1</li>
+<li>Boolean 2</li>
+<li>Byte 2</li>
+<li>Double 2</li>
+<li>Float 2</li>
+<li>Integer 2</li>
+<li>Long 2</li>
+<li>Short 2</li>
+<li>Thread 2</li>
+<li>ThreadLocal 2</li>
+<li>Enum 3</li>
+<li>Throwable 3</li>
+<li>Error 3</li>
+<li>Exception 3</li>
+<li>Class 4</li>
+<li>ClassLoader 4</li>
+<li>Compiler 4</li>
+<li>System 4</li>
+<li>Package 4</li>
+<li>Void 4</li>
+</ol>
+<p>二、java.util</p>
+<ol>
+<li>AbstractList 1</li>
+<li>AbstractMap 1</li>
+<li>AbstractSet 1</li>
+<li>ArrayList 1</li>
+<li>LinkedList 1</li>
+<li>HashMap 1</li>
+<li>Hashtable 1</li>
+<li>HashSet 1</li>
+<li>LinkedHashMap 1</li>
+<li>LinkedHashSet 1</li>
+<li>TreeMap 1</li>
+<li>TreeSet 1</li>
+<li>Vector 2</li>
+<li>Queue 2</li>
+<li>Stack 2</li>
+<li>SortedMap 2</li>
+<li>SortedSet 2</li>
+<li>Collections 3</li>
+<li>Arrays 3</li>
+<li>Comparator 3</li>
+<li>Iterator 3</li>
+<li>Base64 4</li>
+<li>Date 4</li>
+<li>EventListener 4</li>
+<li>Random 4</li>
+<li>SubList 4</li>
+<li>Timer 4</li>
+<li>UUID 4</li>
+<li>WeakHashMap 4</li>
+</ol>
+<p>三、java.util.concurrent</p>
+<ol>
+<li>ConcurrentHashMap 1</li>
+<li>Executor 2</li>
+<li>AbstractExecutorService 2</li>
+<li>ExecutorService 2</li>
+<li>ThreadPoolExecutor 2</li>
+<li>BlockingQueue 2</li>
+<li>AbstractQueuedSynchronizer 2</li>
+<li>CountDownLatch 2</li>
+<li>FutureTask 2</li>
+<li>Semaphore 2</li>
+<li>CyclicBarrier 2</li>
+<li>CopyOnWriteArrayList 3</li>
+<li>SynchronousQueue 3</li>
+<li>BlockingDeque 3</li>
+<li>Callable 4</li>
+</ol>
+<p>四、java.util.concurrent.atomic</p>
+<ol>
+<li>AtomicBoolean 2</li>
+<li>AtomicInteger 2</li>
+<li>AtomicLong 2</li>
+<li>AtomicReference 3</li>
+</ol>
+<p>五、java.lang.reflect</p>
+<ol>
+<li>Field 2</li>
+<li>Method 2</li>
+</ol>
+<p>六、java.lang.annotation</p>
+<ol>
+<li>Annotation 3</li>
+<li>Target 3</li>
+<li>Inherited 3</li>
+<li>Retention 3</li>
+<li>Documented 4</li>
+<li>ElementType 4</li>
+<li>Native 4</li>
+<li>Repeatable 4</li>
+</ol>
+<p>七、java.util.concurrent.locks</p>
+<ol>
+<li>Lock 2</li>
+<li>Condition 2</li>
+<li>ReentrantLock 2</li>
+<li>ReentrantReadWriteLock 2</li>
+</ol>
+<p>八、java.io</p>
+<ol>
+<li>File 3</li>
+<li>InputStream   3</li>
+<li>OutputStream  3</li>
+<li>Reader  4</li>
+<li>Writer  4</li>
+</ol>
+<p>九、java.nio</p>
+<ol>
+<li>Buffer 3</li>
+<li>ByteBuffer 4</li>
+<li>CharBuffer 4</li>
+<li>DoubleBuffer 4</li>
+<li>FloatBuffer 4</li>
+<li>IntBuffer 4</li>
+<li>LongBuffer 4</li>
+<li>ShortBuffer 4</li>
+</ol>
+<p>十、java.sql</p>
+<ol>
+<li>Connection 3</li>
+<li>Driver 3</li>
+<li>DriverManager 3</li>
+<li>JDBCType 3</li>
+<li>ResultSet 4</li>
+<li>Statement 4</li>
+</ol>
+<p>十一、java.net</p>
+<ol>
+<li>Socket 3</li>
+<li>ServerSocket 3</li>
+<li>URI 4</li>
+<li>URL 4</li>
+<li>URLEncoder 4</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/11/使用maven部署构件至nexus/" rel="next" title="使用 maven 部署构件至 nexus">
+                <i class="fa fa-chevron-left"></i> 使用 maven 部署构件至 nexus
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/10/java并发编程的艺术01/" rel="prev" title="java并发编程的艺术01">
+                java并发编程的艺术01 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

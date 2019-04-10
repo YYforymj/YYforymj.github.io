@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="以下是《java并发编程的艺术》一书的读书笔记第三部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java并发编程的艺术03">
+<meta property="og:url" content="http://yoursite.com/2018/10/12/java并发编程的艺术03/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="以下是《java并发编程的艺术》一书的读书笔记第三部分。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/java并发编程的艺术03/java线程状态.jpg">
+<meta property="og:image" content="http://yoursite.com/images/java并发编程的艺术03/java线程状态转换.jpg">
+<meta property="og:image" content="http://yoursite.com/images/java并发编程的艺术03/WaitNotify执行过程.jpg">
+<meta property="og:updated_time" content="2019-04-08T06:31:11.938Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java并发编程的艺术03">
+<meta name="twitter:description" content="以下是《java并发编程的艺术》一书的读书笔记第三部分。">
+<meta name="twitter:image" content="http://yoursite.com/images/java并发编程的艺术03/java线程状态.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/12/java并发编程的艺术03/">
+
+
+
+
+
+  <title>java并发编程的艺术03 | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/12/java并发编程的艺术03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java并发编程的艺术03</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-12T14:52:39+08:00">
+                2018-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/并发/" itemprop="url" rel="index">
+                    <span itemprop="name">并发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>以下是《java并发编程的艺术》一书的读书笔记第三部分。</p>
+</blockquote>
+<a id="more"></a>
+<h4 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h4><p>一个Java程序从main()方法开始执行，然后按照既定的代码逻辑执行，看似没有其他线程参与，但实际上Java程序天生就是多线程程序，因为执行main()方法的是一个名称为main的线程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class MultiThread&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">    // 获取Java线程管理MXBean</span><br><span class="line">        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();</span><br><span class="line">        // 不需要获取同步的monitor和synchronizer信息，仅获取线程和线程堆栈信息</span><br><span class="line">        ThreadInfo[] threadInfos = threadMXBean.dumpAllThreads(false, false);</span><br><span class="line">        // 遍历线程信息，仅打印线程ID和线程名称信息</span><br><span class="line">        for (ThreadInfo threadInfo : threadInfos) &#123;</span><br><span class="line">            System.out.println(&quot;[&quot; + threadInfo.getThreadId() + &quot;] &quot; + threadInfo.getThreadName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的程序输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[6] Monitor Ctrl-Break</span><br><span class="line">[5] Attach Listener</span><br><span class="line">[4] Signal Dispatcher</span><br><span class="line">[3] Finalizer</span><br><span class="line">[2] Reference Handler</span><br><span class="line">[1] main</span><br></pre></td></tr></table></figure>
+<p>可以看到，一个Java程序的运行不仅仅是main()方法的运行，而是main线程和多个其他线程的同时运行。</p>
+<p>线程优先级就是决定线程需要多或者少分配一些处理器资源的线程属性。在Java线程中，通过一个整型成员变量priority来控制优先级，优先级的范围从1~10，在线程构建的时候可以通过setPriority(int)方法来修改优先级，默认优先级是5，优先级高的线程分配时间片的数量要多于优先级低的线程。但是 jvm 的线程优先级不一定会被操作系统使用，所以程序正确性不能依赖线程的优先级高低。</p>
+<h5 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h5><p>下表列出了 java 线程的状态：</p>
+<p><img src="\images\java并发编程的艺术03\java线程状态.jpg" alt="java线程状态"></p>
+<p>下图展示了线程状态之间的转换：</p>
+<p><img src="\images\java并发编程的艺术03\java线程状态转换.jpg" alt="java线程状态转换"></p>
+<p>当线程执行wait()方法之后，线程进入等待状态。进入等待状态的线程需要依靠其他线程的通知才能够返回到运行状态，而超时等待状态相当于在等待状态的基础上增加了超时限制，也就是超时时间到达时将会返回到运行状态。Java将操作系统中的运行和就绪两个状态合并称为运行状态。阻塞状态是线程阻塞在进入synchronized关键字修饰的方法或代码块（获取锁）时的状态，但是阻塞在java.concurrent包中Lock接口的线程状态却是等待状态，因为java.concurrent包中Lock接口对于阻塞的实现均使用了LockSupport类中的相关方法。</p>
+<p>Daemon线程是一种支持型线程，因为它主要被用作程序中后台调度以及支持性工作。这意味着，当一个Java虚拟机中不存在非Daemon线程的时候，Java虚拟机将会退出。可以通过调用Thread.setDaemon(true)将线程设置为Daemon线程。Daemon属性需要在启动线程之前设置，不能在启动线程之后设置。Daemon线程被用作完成支持性工作，但是在Java虚拟机退出时Daemon线程中的finally块并不一定会执行，所以在构建Daemon线程时，不能依靠finally块中的内容来确保执行关闭或清理资源的逻辑。</p>
+<p>线程中断可以理解为线程的一个标识位属性，它表示一个运行中的线程是否被其他线程进行了中断操作。中断好比其他线程对该线程打了个招呼，其他线程通过调用该线程的interrupt()方法对其进行中断操作。而被中断的线程需要通过这个标志位来进行判断当前线程师傅需要停止以取消或停止任务。中断操作的方式能够使线程在终止时有机会去清理资源，而不是武断地将线程停止，因此这种终止线程的做法显得更加安全和优雅。</p>
+<h4 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h4><p>wait/notify：Object 类有 notify()、notifyAll()、wait() 方法，用于实现进程间通信。线程A调用了对象O的wait()方法进入等待状态，而另一个线程B调用了对象O的notify()或者notifyAll()方法，线程A收到通知后从对象O的wait()方法返回，进而执行后续操作。上述两个线程通过对象O来完成交互，而对象上的wait()和notify/notifyAll()的关系就如同开关信号一样，用来完成等待方和通知方之间的交互工作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">public class WaitNotify &#123;</span><br><span class="line">    static boolean flag = true;</span><br><span class="line">    static Object lock = new Object();</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Thread waitThread = new Thread(new Wait(), &quot;WaitThread&quot;);</span><br><span class="line">        waitThread.start();</span><br><span class="line">        TimeUnit.SECONDS.sleep(1);</span><br><span class="line">        Thread notifyThread = new Thread(new Notify(), &quot;NotifyThread&quot;);</span><br><span class="line">        notifyThread.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class Wait implements Runnable &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            // 加锁，拥有lock的Monitor</span><br><span class="line">            synchronized (lock) &#123;</span><br><span class="line">                // 当条件不满足时，继续wait，同时释放了lock的锁</span><br><span class="line">                while (flag) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        System.out.println(Thread.currentThread() + &quot; flag is true. wait&quot; +</span><br><span class="line">                                new SimpleDateFormat(&quot; HH:mm:ss &quot;).format(new Date()));</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                // 条件满足时，完成工作</span><br><span class="line">                System.out.println(Thread.currentThread() + &quot; flag is false. running&quot; +</span><br><span class="line">                        new SimpleDateFormat(&quot; HH:mm:ss &quot;).format(new Date()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class Notify implements Runnable &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            // 加锁，拥有lock的Monitor</span><br><span class="line">            synchronized (lock) &#123;</span><br><span class="line">                // 获取lock的锁，然后进行通知，通知时不会释放lock的锁，</span><br><span class="line">                // 直到当前线程释放了lock后，WaitThread才能从wait方法中返回</span><br><span class="line">                System.out.println(Thread.currentThread() + &quot; hold lock. notify &quot; +</span><br><span class="line">                        new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));</span><br><span class="line">                lock.notifyAll();</span><br><span class="line">                flag = false;</span><br><span class="line">                SleepUtils.second(5);</span><br><span class="line">            &#125;</span><br><span class="line">            //再次加锁</span><br><span class="line">            synchronized (lock) &#123;</span><br><span class="line">                System.out.println(Thread.currentThread() + &quot; hold lock again. sleep&quot; +</span><br><span class="line">                        new SimpleDateFormat(&quot; HH:mm:ss &quot;).format(new Date()));</span><br><span class="line">                SleepUtils.second(5);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的程序输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Thread[WaitThread,5,main] flag is true. wait 10:57:54 </span><br><span class="line">Thread[NotifyThread,5,main] hold lock. notify 10:57:55</span><br><span class="line">Thread[NotifyThread,5,main] hold lock again. sleep 10:58:00 </span><br><span class="line">Thread[WaitThread,5,main] flag is false. running 10:58:05</span><br></pre></td></tr></table></figure>
+<p>从程序与运行结果中我们可以知道：</p>
+<ol>
+<li>使用wait()、notify()和notifyAll()时需要先对调用对象加锁。</li>
+<li>调用wait()方法后，线程状态由RUNNING变为WAITING，并将当前线程放置到对象的等待队列。</li>
+<li>notify()或notifyAll()方法调用后，等待线程依旧不会从wait()返回，需要调用notify()或notifAll()的线程释放锁之后，等待线程才有机会从wait()返回。</li>
+<li>notify()方法将等待队列中的一个等待线程从等待队列中移到同步队列中，而notifyAll()方法则是将等待队列中所有的线程全部移到同步队列，被移动的线程状态由WAITING变为BLOCKED。</li>
+<li>从wait()方法返回的前提是获得了调用对象的锁。</li>
+</ol>
+<p>下图描述了程序执行过程：</p>
+<p><img src="\images\java并发编程的艺术03\WaitNotify执行过程.jpg" alt="WaitNotify执行过程"></p>
+<p>Thread.join()：如果一个线程A执行了thread.join()语句，其含义是：当前线程A等待thread线程终止之后才从thread.join()返回。线程Thread除了提供join()方法之外，还提供了join(long millis)和join(longmillis,int nanos)两个具备超时特性的方法。这两个超时方法表示，如果线程thread在给定的超时时间里没有终止，那么将会从该超时方法中返回。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public class Join &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Thread previous = Thread.currentThread();</span><br><span class="line">        for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">// 每个线程拥有前一个线程的引用，需要等待前一个线程终止，才能从等待中返回</span><br><span class="line">            Thread thread = new Thread(new Domino(previous), String.valueOf(i));</span><br><span class="line">            thread.start();</span><br><span class="line">            previous = thread;</span><br><span class="line">        &#125;</span><br><span class="line">        TimeUnit.SECONDS.sleep(5);</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + &quot; terminate.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class Domino implements Runnable &#123;</span><br><span class="line">        private Thread thread;</span><br><span class="line"></span><br><span class="line">        public Domino(Thread thread) &#123;</span><br><span class="line">            this.thread = thread;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                thread.join();</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + &quot; terminate.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>s输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main terminate.</span><br><span class="line">0 terminate.</span><br><span class="line">1 terminate.</span><br><span class="line">2 terminate.</span><br><span class="line">3 terminate.</span><br><span class="line">4 terminate.</span><br><span class="line">5 terminate.</span><br><span class="line">6 terminate.</span><br><span class="line">7 terminate.</span><br><span class="line">8 terminate.</span><br><span class="line">9 terminate.</span><br></pre></td></tr></table></figure>
+<p>从上述输出可以看到，每个线程终止的前提是前驱线程的终止，每个线程等待前驱线程终止后，才从join()方法返回。</p>
+<h5 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h5><p>ThreadLocal，即线程变量，是一个以ThreadLocal对象为键、任意对象为值的存储结构。这个结构被附带在线程上，可以通过set(T)方法来设置一个值，在当前线程下再通过get()方法获取到原先设置的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Profiler &#123;</span><br><span class="line">    // 第一次get()方法调用时会进行初始化（如果set方法没有调用），每个线程会调用一次</span><br><span class="line">    private static final ThreadLocal&lt;Long&gt; TIME_THREADLOCAL = new ThreadLocal&lt;Long&gt;() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        protected Long initialValue() &#123;</span><br><span class="line">            return System.currentTimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    public static final void begin() &#123;</span><br><span class="line">        TIME_THREADLOCAL.set(System.currentTimeMillis());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static final long end() &#123;</span><br><span class="line">        return System.currentTimeMillis() - TIME_THREADLOCAL.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Profiler.begin();</span><br><span class="line">        TimeUnit.SECONDS.sleep(1);</span><br><span class="line">        System.out.println(&quot;Cost: &quot; + Profiler.end() + &quot; mills&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序输出结果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cost: 1001 mills</span><br></pre></td></tr></table></figure>
+<h4 id="线程使用实例"><a href="#线程使用实例" class="headerlink" title="线程使用实例"></a>线程使用实例</h4><p>线程现在最常用的使用方式就是线程池了，线程池预先创建了若干数量的线程，并且不能由用户直接对线程的创建进行控制，在这个前提下重复使用固定或较为固定数目的线程来完成任务的执行。这样做的好处是，一方面，消除了频繁创建和消亡线程的系统资源开销，另一方面，面对过量任务的提交能够平缓的劣化。</p>
+<p>下面的接口简单的定义了一个线程池所需要实现的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public interface ThreadPool&lt;Job extends Runnable&gt; &#123;</span><br><span class="line">    // 执行一个Job，这个Job需要实现Runnable</span><br><span class="line">    void execute(Job job);</span><br><span class="line">    // 关闭线程池</span><br><span class="line">    void shutdown();</span><br><span class="line">    // 增加工作者线程</span><br><span class="line">    void addWorkers(int num);</span><br><span class="line">    // 减少工作者线程</span><br><span class="line">    void removeWorker(int num);</span><br><span class="line">    // 得到正在等待执行的任务数量</span><br><span class="line">    int getJobSize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端可以通过execute(Job)方法将Job提交入线程池执行，每个由客户端提交的Job都将进入到一个工作队列中等待工作者线程的处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line">public class DefaultThreadPool&lt;Job extends Runnable&gt; implements ThreadPool&lt;Job&gt; &#123;</span><br><span class="line">    // 线程池最大限制数</span><br><span class="line">    private static final int MAX_WORKER_NUMBERS = 10;</span><br><span class="line">    // 线程池默认的数量</span><br><span class="line">    private static final int DEFAULT_WORKER_NUMBERS = 5;</span><br><span class="line">    // 线程池最小的数量</span><br><span class="line">    private static final int MIN_WORKER_NUMBERS = 1;</span><br><span class="line">    // 这是一个工作列表，将会向里面插入工作</span><br><span class="line">    private final LinkedList&lt;Job&gt; jobs = new LinkedList&lt;Job&gt;();</span><br><span class="line">    // 工作者列表</span><br><span class="line">    private final List&lt;Worker&gt; workers = Collections.synchronizedList(new</span><br><span class="line">            ArrayList&lt;Worker&gt;());</span><br><span class="line">    // 工作者线程的数量</span><br><span class="line">    private int workerNum = DEFAULT_WORKER_NUMBERS;</span><br><span class="line">    // 线程编号生成</span><br><span class="line">    private AtomicLong threadNum = new AtomicLong();</span><br><span class="line"></span><br><span class="line">    public DefaultThreadPool() &#123;</span><br><span class="line">        initializeWokers(DEFAULT_WORKER_NUMBERS);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public DefaultThreadPool(int num) &#123;</span><br><span class="line">        workerNum = num &gt; MAX_WORKER_NUMBERS ? MAX_WORKER_NUMBERS :</span><br><span class="line">                num &lt; MIN_WORKER_NUMBERS ? MIN_WORKER_NUMBERS : num;</span><br><span class="line">        initializeWokers(workerNum);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute(Job job) &#123;</span><br><span class="line">        if (job != null) &#123;</span><br><span class="line">// 添加一个工作，然后进行通知</span><br><span class="line">            synchronized (jobs) &#123;</span><br><span class="line">                jobs.addLast(job);</span><br><span class="line">                jobs.notify();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void shutdown() &#123;</span><br><span class="line">        for (Worker worker : workers) &#123;</span><br><span class="line">            worker.shutdown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void addWorkers(int num) &#123;</span><br><span class="line">        synchronized (jobs) &#123;</span><br><span class="line">// 限制新增的Worker数量不能超过最大值</span><br><span class="line">            if (num + this.workerNum &gt; MAX_WORKER_NUMBERS) &#123;</span><br><span class="line">                num = MAX_WORKER_NUMBERS - this.workerNum;</span><br><span class="line">            &#125;</span><br><span class="line">            initializeWokers(num);</span><br><span class="line">            this.workerNum += num;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void removeWorker(int num) &#123;</span><br><span class="line">        synchronized (jobs) &#123;</span><br><span class="line">            if (num &gt;= this.workerNum) &#123;</span><br><span class="line">                throw new IllegalArgumentException(&quot;beyond workNum&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            //按照给定的数量停止Worker</span><br><span class="line">            int count = 0;</span><br><span class="line">            while (count &lt; num) &#123;</span><br><span class="line">                Worker worker = workers.get(count);</span><br><span class="line">                if (workers.remove(worker)) &#123;</span><br><span class="line">                    worker.shutdown();</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            this.workerNum -= count;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int getJobSize() &#123;</span><br><span class="line">        return jobs.size();</span><br><span class="line">    &#125;</span><br><span class="line">    //初始化线程工作者</span><br><span class="line"></span><br><span class="line">    private void initializeWokers(int num) &#123;</span><br><span class="line">        for (int i = 0; i &lt; num; i++) &#123;</span><br><span class="line">            Worker worker = new Worker();</span><br><span class="line">            workers.add(worker);</span><br><span class="line">            Thread thread = new Thread(worker, &quot;ThreadPool-Worker-&quot; + threadNum.</span><br><span class="line">                    incrementAndGet());</span><br><span class="line">            thread.start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //工作者，负责消费任务</span><br><span class="line"></span><br><span class="line">    class Worker implements Runnable &#123;</span><br><span class="line">        // 是否工作</span><br><span class="line">        private volatile boolean running = true;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while (running) &#123;</span><br><span class="line">                Job job = null;</span><br><span class="line">                synchronized (jobs) &#123;</span><br><span class="line">                // 如果工作者列表是空的，那么就wait</span><br><span class="line">                    while (jobs.isEmpty()) &#123;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            jobs.wait();</span><br><span class="line">                        &#125; catch (InterruptedException ex) &#123;</span><br><span class="line">                        // 感知到外部对WorkerThread的中断操作，返回</span><br><span class="line">                            Thread.currentThread().interrupt();</span><br><span class="line">                            return;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    //取出一个Job</span><br><span class="line">                    job = jobs.removeFirst();</span><br><span class="line">                &#125;</span><br><span class="line">                if (job != null) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        job.run();</span><br><span class="line">                    &#125; catch (Exception ex) &#123;</span><br><span class="line">                    // 忽略Job执行中的Exception</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void shutdown() &#123;</span><br><span class="line">            running = false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码为ThreadPool实现类。当客户端调用execute(Job)方法时，会不断地向任务列表jobs中添加Job，而每个工作者线程会不断地从jobs上取出一个Job进行执行，当jobs为空时，工作者线程进入等待状态。添加一个Job后，对工作队列jobs调用了其notify()方法，而不是notifyAll()方法，因为能够确定有工作者线程被唤醒，这时使用notify()方法将会比notifyAll()方法获得更小的开销（避免将等待队列中的线程全部移动到阻塞队列中）。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/11/java并发编程的艺术02/" rel="next" title="java并发编程的艺术02">
+                <i class="fa fa-chevron-left"></i> java并发编程的艺术02
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/16/Java并发编程的艺术04/" rel="prev" title="Java并发编程的艺术04">
+                Java并发编程的艺术04 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程"><span class="nav-number">1.</span> <span class="nav-text">线程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#线程状态"><span class="nav-number">1.1.</span> <span class="nav-text">线程状态</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程间通信"><span class="nav-number">2.</span> <span class="nav-text">线程间通信</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ThreadLocal"><span class="nav-number">2.1.</span> <span class="nav-text">ThreadLocal</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程使用实例"><span class="nav-number">3.</span> <span class="nav-text">线程使用实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

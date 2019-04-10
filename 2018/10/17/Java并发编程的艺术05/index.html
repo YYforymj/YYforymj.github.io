@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="以下是《java并发编程的艺术》一书的读书笔记第五部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发编程的艺术05">
+<meta property="og:url" content="http://yoursite.com/2018/10/17/Java并发编程的艺术05/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="以下是《java并发编程的艺术》一书的读书笔记第五部分。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/java并发编程的艺术05/线程池处理流程.jpg">
+<meta property="og:image" content="http://yoursite.com/images/java并发编程的艺术05/ThreadPoolExecutor.jpg">
+<meta property="og:image" content="http://yoursite.com/images/java并发编程的艺术05/ThreadPoolExecutor线程池工作流程.jpg">
+<meta property="og:updated_time" content="2019-04-08T06:31:11.919Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发编程的艺术05">
+<meta name="twitter:description" content="以下是《java并发编程的艺术》一书的读书笔记第五部分。">
+<meta name="twitter:image" content="http://yoursite.com/images/java并发编程的艺术05/线程池处理流程.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/17/Java并发编程的艺术05/">
+
+
+
+
+
+  <title>Java并发编程的艺术05 | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/17/Java并发编程的艺术05/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发编程的艺术05</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-17T14:40:12+08:00">
+                2018-10-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/并发/" itemprop="url" rel="index">
+                    <span itemprop="name">并发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>以下是《java并发编程的艺术》一书的读书笔记第五部分。</p>
+</blockquote>
+<a id="more"></a>
+<h4 id="原子操作类"><a href="#原子操作类" class="headerlink" title="原子操作类"></a>原子操作类</h4><p>多线程更新一个变量的时候，由于每个线程都有自己对于共享变脸的副本，而且副本不是实时刷新到主内存中的，所以可能会出现更新结果不符合预期的情况。例如，变量i=1，A线程更新i+1，B线程也更新i+1，经过两个线程操作之后可能i不等于3，而是等于2。因为A和B线程在更新变量i的时候拿到的i都是1，这就是线程不安全的更新操作，通常我们会使用synchronized来解决这个问题，synchronized会保证多线程不会同时更新变量i。但是synchronized使用的是悲观锁，过于重量，系统开销较大，而java.util.concurrent.atomic包的出现弥补了这个不足。java.util.concurrent.atomic的原子操作类提供了更简单高效且线程安全的方式对共享变量进行更新。Atomic包里的类基本都是使用Unsafe实现的包装类。同时，使用了更细粒度的 volatile 与 CAS 操作，提升了性能。</p>
+<p>Atomic包下主要包含以下几种类型：</p>
+<ul>
+<li>原子更新基本类型类：AtomicBoolean 、AtomicInteger 、AtomicLong ，用于更新基本类型数据，对于其他基本类型可以先转换为int或者long，在进行操作；</li>
+<li>原子更新数组类：AtomicIntegerArray 、AtomicLongArray 、AtomicReferenceArray，通过原子的方式更新数组里的某个元素；</li>
+<li>原子更新引用类型类：AtomicReference、AtomicReferenceFieldUpdater（原子更新引用类型里的字段 ）、AtomicMarkableReference（原子更新带有标记位的引用类型。可以原子更新一个布尔类型的标记位和引用类型）</li>
+<li>原子更新字段类：AtomicIntegerFieldUpdater（原子更新整型的字段）、AtomicLongFieldUpdater、AtomicStampedReference（原子更新带有版本号的引用类型，可以解决使用CAS进行原子更新时可能出现的ABA问题）要想原子地更新字段类需要两步。第一步，因为原子更新字段类都是抽象类，每次使用的时候必须使用静态方法newUpdater()创建一个更新器，并且需要设置想要更新的类和属性。第二步，更新类的字段（属性）必须使用public volatile修饰符。</li>
+</ul>
+<h4 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h4><p>CountDownLatch允许一个或多个线程等待其他线程完成操作。</p>
+<p>以之前的连接池实例为例，有下面三个类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class ConnectionDriver &#123;</span><br><span class="line">    static class ConnectionHandler implements InvocationHandler &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line">            if (method.getName().equals(&quot;commit&quot;)) &#123;</span><br><span class="line">                TimeUnit.MILLISECONDS.sleep(100);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //创建一个Connection的代理，在commit时休眠100毫秒</span><br><span class="line">    public static final Connection createConnection() &#123;</span><br><span class="line">        return (Connection) Proxy.newProxyInstance(ConnectionDriver.class.getClassLoader(),</span><br><span class="line">                new Class[] &#123;Connection.class&#125;, new ConnectionHandler());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public class ConnectionPool &#123;</span><br><span class="line">    private LinkedList&lt;Connection&gt; pool = new LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public ConnectionPool(int initialSize) &#123;</span><br><span class="line">        if (initialSize &gt; 0) &#123;</span><br><span class="line">            for (int i = 0; i &lt; initialSize; i++) &#123;</span><br><span class="line">                pool.addLast(ConnectionDriver.createConnection());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void releaseConnection(Connection connection) &#123;</span><br><span class="line">        if (connection != null) &#123;</span><br><span class="line">            synchronized (pool) &#123;</span><br><span class="line">// 连接释放后需要进行通知，这样其他消费者能够感知到连接池中已经归还了一个连接</span><br><span class="line">                pool.addLast(connection);</span><br><span class="line">                pool.notifyAll();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //在mills内无法获取到连接，将会返回null</span><br><span class="line"></span><br><span class="line">    public Connection fetchConnection(long mills) throws InterruptedException &#123;</span><br><span class="line">        synchronized (pool) &#123;</span><br><span class="line">            // 完全超时</span><br><span class="line">            if (mills &lt;= 0) &#123;</span><br><span class="line">                while (pool.isEmpty()) &#123;</span><br><span class="line">                    pool.wait();</span><br><span class="line">                &#125;</span><br><span class="line">                return pool.removeFirst();</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                long future = System.currentTimeMillis() + mills;</span><br><span class="line">                long remaining = mills;</span><br><span class="line">                while (pool.isEmpty() &amp;&amp; remaining &gt; 0) &#123;</span><br><span class="line">                    pool.wait(remaining);</span><br><span class="line">                    remaining = future - System.currentTimeMillis();</span><br><span class="line">                &#125;</span><br><span class="line">                Connection result = null;</span><br><span class="line">                if (!pool.isEmpty()) &#123;</span><br><span class="line">                    result = pool.removeFirst();</span><br><span class="line">                &#125;</span><br><span class="line">                return result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">public class ConnectionPoolTest &#123;</span><br><span class="line">    static ConnectionPool pool = new ConnectionPool(20);</span><br><span class="line">    // 保证所有ConnectionRunner能够同时开始</span><br><span class="line">    static CountDownLatch start = new CountDownLatch(1);</span><br><span class="line">    // main线程将会等待所有ConnectionRunner结束后才能继续执行</span><br><span class="line">    static CountDownLatch end;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        // 线程数量，可以修改线程数量进行观察</span><br><span class="line">        int threadCount = 20;</span><br><span class="line">        end = new CountDownLatch(threadCount);</span><br><span class="line">        int count = 20;</span><br><span class="line">        AtomicInteger got = new AtomicInteger();</span><br><span class="line">        AtomicInteger notGot = new AtomicInteger();</span><br><span class="line">        for (int i = 0; i &lt; threadCount; i++) &#123;</span><br><span class="line">            Thread thread = new Thread(new ConnectionRunner(count, got, notGot),</span><br><span class="line">                    &quot;ConnectionRunnerThread&quot;);</span><br><span class="line">            thread.start();</span><br><span class="line">        &#125;</span><br><span class="line">        long startTime = System.currentTimeMillis();</span><br><span class="line">        start.countDown();</span><br><span class="line">        end.await();</span><br><span class="line">        long endTime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(&quot;cost time: &quot; + (endTime-startTime));</span><br><span class="line">        System.out.println(&quot;total invoke: &quot; + (threadCount * count));</span><br><span class="line">        System.out.println(&quot;got connection: &quot; + got);</span><br><span class="line">        System.out.println(&quot;not got connection &quot; + notGot);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class ConnectionRunner implements Runnable &#123;</span><br><span class="line">        int count;</span><br><span class="line">        AtomicInteger got;</span><br><span class="line">        AtomicInteger notGot;</span><br><span class="line"></span><br><span class="line">        public ConnectionRunner(int count, AtomicInteger got, AtomicInteger notGot) &#123;</span><br><span class="line">            this.count = count;</span><br><span class="line">            this.got = got;</span><br><span class="line">            this.notGot = notGot;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                start.await();</span><br><span class="line">            &#125; catch (Exception ex) &#123;</span><br><span class="line">            &#125;</span><br><span class="line">            while (count &gt; 0) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                // 从线程池中获取连接，如果1000ms内无法获取到，将会返回null</span><br><span class="line">                // 分别统计连接获取的数量got和未获取到的数量notGot</span><br><span class="line">                    Connection connection = pool.fetchConnection(1000);</span><br><span class="line">                    if (connection != null) &#123;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            connection.createStatement();</span><br><span class="line">                            connection.commit();</span><br><span class="line">                        &#125; finally &#123;</span><br><span class="line">                          pool.releaseConnection(connection);</span><br><span class="line">                            got.incrementAndGet();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        notGot.incrementAndGet();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception ex) &#123;</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    count--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            end.countDown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，ConnectionPoolTest 便利用了 CountDownLatch 作为控制媒介，确保 main 线程能在其他所有测试线程执行前保持阻塞，而在其他线程都执行完后，CountDownLatch 归零，main 线程从 end.await() 中返回，进行统计输出。</p>
+<p>CountDownLatch 源码比较简单，其内部有个 AbstractQueuedSynchronizer 的实现类 Sync（类似的类在 ReentrantLock 也存在），Sync实例化后集成了 AbstractQueuedSynchronizer 中的 int 类型成员 state。state 用于存储当前对象（CountDownLatch实例）的状态，当 state 归零时，对象便从 await() 方法返回。</p>
+<h4 id="CyclicBarrier"><a href="#CyclicBarrier" class="headerlink" title="CyclicBarrier"></a>CyclicBarrier</h4><p>CyclicBarrier 作用是让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续运行。</p>
+<p>CyclicBarrier默认的构造方法是CyclicBarrier（int parties），其参数表示屏障拦截的线程数量，每个线程调用await方法告诉CyclicBarrier我已经到达了屏障，然后当前线程被阻塞。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">class Solver &#123;</span><br><span class="line">    final int N;</span><br><span class="line">    final float[][] data;</span><br><span class="line">    final CyclicBarrier barrier;</span><br><span class="line"> </span><br><span class="line">    class Worker implements Runnable &#123;</span><br><span class="line">      int myRow;</span><br><span class="line">      Worker(int row) &#123; myRow = row; &#125;</span><br><span class="line">      public void run() &#123;</span><br><span class="line">        while (!done()) &#123;</span><br><span class="line">          processRow(myRow);</span><br><span class="line"> </span><br><span class="line">          try &#123;</span><br><span class="line">            barrier.await();</span><br><span class="line">          &#125; catch (InterruptedException ex) &#123;</span><br><span class="line">            return;</span><br><span class="line">          &#125; catch (BrokenBarrierException ex) &#123;</span><br><span class="line">            return;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public Solver(float[][] matrix) &#123;</span><br><span class="line">      data = matrix;</span><br><span class="line">      N = matrix.length;</span><br><span class="line">      Runnable barrierAction =</span><br><span class="line">        new Runnable() &#123; public void run() &#123; mergeRows(...); &#125;&#125;;</span><br><span class="line">      barrier = new CyclicBarrier(N, barrierAction);</span><br><span class="line"> </span><br><span class="line">      List&lt;Thread&gt; threads = new ArrayList&lt;Thread&gt;(N);</span><br><span class="line">      for (int i = 0; i &lt; N; i++) &#123;</span><br><span class="line">        Thread thread = new Thread(new Worker(i));</span><br><span class="line">        threads.add(thread);</span><br><span class="line">        thread.start();</span><br><span class="line">      &#125;</span><br><span class="line"> </span><br><span class="line">      // wait until done</span><br><span class="line">      for (Thread thread : threads)</span><br><span class="line">        thread.join();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码是源码中给出的一个示例，大概的用途是计算矩阵计算。Worker 用于计算每一列的结果，new CyclicBarrier(N, barrierAction) 用于在 CyclicBarrier 归零后执行barrierAction中的操作，也就是将各列的值在进行计算，完成矩阵计算，最后等待所有线程执行结束防止程序出错。</p>
+<h5 id="CyclicBarrier和CountDownLatch的区别"><a href="#CyclicBarrier和CountDownLatch的区别" class="headerlink" title="CyclicBarrier和CountDownLatch的区别"></a>CyclicBarrier和CountDownLatch的区别</h5><p>CountDownLatch的计数器只能使用一次，而CyclicBarrier的计数器可以使用reset()方法重置。所以CyclicBarrier能处理更为复杂的业务场景。例如，如果计算发生错误，可以重置计数器，并让线程重新执行一次。CyclicBarrier还提供其他有用的方法，比如getNumberWaiting方法可以获得Cyclic-Barrier阻塞的线程数量。isBroken()方法用来了解阻塞的线程是否被中断。</p>
+<h4 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h4><p>Semaphore（信号量）是用来控制同时访问特定资源的线程数量的，可以用于做流量控制，特别是公用资源有限的应用场景，比如数据库连接。假如有一个需求，要读取几万个文件的数据，因为都是IO密集型任务，我们可以启动几十个线程并发地读取，但是如果读到内存后，还需要存储到数据库中，而数据库的连接数只有10个，这时我们必须控制只有10个线程同时获取数据库连接保存数据，否则会报错无法获取数据库连接。这个时候，就可以使用Semaphore来做流量控制，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class SemaphoreTest &#123;</span><br><span class="line">    private static final int THREAD_COUNT = 30;</span><br><span class="line">    private static ExecutorService threadPool =Executors.newFixedThreadPool(THREAD_COUNT);</span><br><span class="line">    private static Semaphore s = new Semaphore(10);</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        for (int i = 0; i &lt; THREAD_COUNT; i++) &#123;</span><br><span class="line">            threadPool.execute(new Runnable() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        s.acquire();</span><br><span class="line">                        System.out.println(&quot;save data&quot;);</span><br><span class="line">                        System.out.println(Thread.currentThread());</span><br><span class="line">                        s.release();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        threadPool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在代码中，虽然有30个线程在执行，但是只允许10个并发执行。Semaphore的构造方法Semaphore（int permits）接受一个整型的数字，表示可用的许可证数量。Semaphore的用法也很简单，首先线程使用Semaphore的acquire()方法获取一个许可证，使用完之后调用release()方法归还许可证。还可以用tryAcquire()方法尝试获取许可证。</p>
+<h4 id="Exchanger"><a href="#Exchanger" class="headerlink" title="Exchanger"></a>Exchanger</h4><p>Exchanger（交换者）是一个用于线程间协作的工具类。Exchanger用于进行线程间的数据交换。它提供一个同步点，在这个同步点，两个线程可以交换彼此的数据。这两个线程通过exchange方法交换数据，如果第一个线程先执行exchange()方法，它会一直等待第二个线程也执行exchange方法，当两个线程都到达同步点时，这两个线程就可以交换数据，将本线程生产出来的数据传递给对方。</p>
+<p>Exchanger可以用于遗传算法，遗传算法里需要选出两个人作为交配对象，这时候会交换两人的数据，并使用交叉规则得出2个交配结果。Exchanger也可以用于校对工作，比如我们需要将纸制银行流水通过人工的方式录入成电子银行流水，为了避免错误，采用AB岗两人进行录入，录入到Excel之后，系统需要加载这两个Excel，并对两个Excel数据进行校对，看看是否录入一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public class ExchangerTest &#123;</span><br><span class="line">    private static final Exchanger&lt;String&gt; exgr = new Exchanger&lt;String&gt;();</span><br><span class="line">    private static ExecutorService threadPool</span><br><span class="line">            = Executors.newFixedThreadPool(2);</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        threadPool.execute(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    String A = &quot;银行流水A&quot;; // A录入银行流水数据</span><br><span class="line">                    String fromB = exgr.exchange(A);</span><br><span class="line">                    System.out.println(&quot;fromB: &quot;+ fromB);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        threadPool.execute(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    String B = &quot;银行流水B&quot;; // B录入银行流水数据</span><br><span class="line">                    String fromA = exgr.exchange(B);</span><br><span class="line">                    System.out.println(&quot;fromA: &quot;+ fromA);</span><br><span class="line">                    System.out.println(&quot;A和B数据是否一致：&quot; + fromA.equals(B) + &quot;，A录入的是：&quot; + fromA + &quot;，B录入是：&quot; + B);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        threadPool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果两个线程有一个没有执行exchange()方法，则会一直等待，如果担心有特殊情况发生，避免一直等待，可以使用exchange（V x，longtimeout，TimeUnit unit）设置最大等待时长。</p>
+<h4 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h4><p>在开发过程中，合理地使用线程池能够带来3个好处。</p>
+<ol>
+<li>降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</li>
+<li>提高响应速度。当任务到达时，任务可以不需要等到线程创建就能立即执行。</li>
+<li>提高线程的可管理性。线程是稀缺资源，如果无限制地创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。</li>
+</ol>
+<h5 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h5><p><img src="\images\java并发编程的艺术05\线程池处理流程.jpg" alt="线程池处理流程"></p>
+<p>当提交一个新任务到线程池时，线程池的处理流程如下。<br>1）线程池判断核心线程池里的线程是否都在执行任务。如果不是，则创建一个新的工作线程来执行任务。如果核心线程池里的线程都在执行任务，则进入下个流程。<br>2）线程池判断工作队列是否已经满。如果工作队列没有满，则将新提交的任务存储在这个工作队列里。如果工作队列满了，则进入下个流程。<br>3）线程池判断线程池的线程是否都处于工作状态。如果没有，则创建一个新的工作线程来执行任务。如果已经满了，则交给饱和策略来处理这个任务。</p>
+<p>java的线程池支持主要通过ThreadPoolExecutor来实现，我们使用的ExecutorService的各种线程池策略都是基于ThreadPoolExecutor实现的。</p>
+<p>ThreadPoolExecutor执行execute方法分下面4种情况。<br>1）如果当前运行的线程少于corePoolSize，则创建新线程来执行任务（注意，执行这一步骤需要获取全局锁）。<br>2）如果运行的线程等于或多于corePoolSize，则将任务加入BlockingQueue。<br>3）如果无法将任务加入BlockingQueue（队列已满）且线程池中线程数量没有超过maximumPoolSize，则创建新的线程来处理任务（注意，执行这一步骤需要获取全局锁）。<br>4）如果创建新线程将使当前运行的线程超出maximumPoolSize，任务将被拒绝，并调用RejectedExecutionHandler.rejectedExecution()方法。</p>
+<p><img src="\images\java并发编程的艺术05\ThreadPoolExecutor.jpg" alt="ThreadPoolExecutor"></p>
+<p>线程池中的线程执行任务分两种情况，如下。</p>
+<ol>
+<li>在execute()方法中创建一个线程时，会让这个线程执行当前任务。</li>
+<li>这个线程执行完上图中1的任务后，会反复从BlockingQueue获取任务来执行。</li>
+</ol>
+<p><img src="\images\java并发编程的艺术05\ThreadPoolExecutor线程池工作流程.jpg" alt="ThreadPoolExecutor线程池工作流程"></p>
+<h5 id="线程池的创建"><a href="#线程池的创建" class="headerlink" title="线程池的创建"></a>线程池的创建</h5><p>我们可以通过ThreadPoolExecutor来创建一个线程池。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">                              int maximumPoolSize,</span><br><span class="line">                              long keepAliveTime,</span><br><span class="line">                              TimeUnit unit,</span><br><span class="line">                              BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                              ThreadFactory threadFactory,</span><br><span class="line">                              RejectedExecutionHandler handler)</span><br></pre></td></tr></table></figure>
+<p>创建一个线程池时需要输入几个参数，如下。</p>
+<ol>
+<li>corePoolSize（线程池的基本大小）：当提交一个任务到线程池时，线程池会创建一个线程来执行任务，即使其他空闲的基本线程能够执行新任务也会创建线程，等到需要执行的任务数大于线程池基本大小时就不再创建。如果调用了线程池的prestartAllCoreThreads()方法，线程池会提前创建并启动所有基本线程。</li>
+<li>runnableTaskQueue（任务队列）：用于保存等待执行的任务的阻塞队列。可以选择以下几个阻塞队列。<ul>
+<li>ArrayBlockingQueue：是一个基于数组结构的有界阻塞队列，此队列按FIFO（先进先出）原则对元素进行排序。</li>
+<li>LinkedBlockingQueue：一个基于链表结构的阻塞队列，此队列按FIFO排序元素，吞吐量通常要高于ArrayBlockingQueue。静态工厂方法Executors.newFixedThreadPool()使用了这个队列。</li>
+<li>SynchronousQueue：一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于Linked-BlockingQueue，静态工厂方法Executors.newCachedThreadPool使用了这个队列。</li>
+<li>PriorityBlockingQueue：一个具有优先级的无限阻塞队列。</li>
+</ul>
+</li>
+<li>maximumPoolSize（线程池最大数量）：线程池允许创建的最大线程数。如果队列满了，并且已创建的线程数小于最大线程数，则线程池会再创建新的线程执行任务。值得注意的是，如果使用了无界的任务队列这个参数就没什么效果。</li>
+<li>ThreadFactory：用于设置创建线程的工厂，可以通过线程工厂给每个创建出来的线程设置更有意义的名字。</li>
+<li>RejectedExecutionHandler（饱和策略）：当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。在JDK 1.5中Java线程池框架提供了以下4种策略。<ul>
+<li>AbortPolicy：直接抛出异常。</li>
+<li>CallerRunsPolicy：只用调用者所在线程来运行任务。</li>
+<li>DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。</li>
+<li>DiscardPolicy：不处理，丢弃掉。</li>
+</ul>
+</li>
+<li>keepAliveTime（线程活动保持时间）：线程池的工作线程空闲后，保持存活的时间。所以，如果任务很多，并且每个任务执行的时间比较短，可以调大时间，提高线程的利用率。</li>
+<li>TimeUnit（线程活动保持时间的单位，一个枚举类）：可选的单位有天（DAYS）、小时（HOURS）、分钟（MINUTES）、毫秒（MILLISECONDS）、微秒（MICROSECONDS，千分之一毫秒）和纳秒（NANOSECONDS，千分之一微秒）。</li>
+</ol>
+<h5 id="向线程池提交任务"><a href="#向线程池提交任务" class="headerlink" title="向线程池提交任务"></a>向线程池提交任务</h5><p>可以使用两个方法向线程池提交任务，分别为execute()和submit()方法。</p>
+<p>execute()方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功。</p>
+<p>submit()方法用于提交需要返回值的任务。线程池会返回一个future类型的对象，通过这个future对象可以判断任务是否执行成功，并且可以通过future的get()方法来获取返回值，get()方法会阻塞当前线程直到任务完成，而使用get（long timeout，TimeUnit unit）方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。</p>
+<h5 id="关闭线程池"><a href="#关闭线程池" class="headerlink" title="关闭线程池"></a>关闭线程池</h5><p>可以通过调用线程池的shutdown或shutdownNow方法来关闭线程池。它们的原理是遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程，所以无法响应中断的任务可能永远无法终止。但是它们存在一定的区别，shutdownNow首先将线程池的状态设置成STOP，然后尝试停止所有的正在执行或暂停任务的线程，并返回等待执行任务的列表，而shutdown只是将线程池的状态设置成SHUTDOWN状态，然后中断所有没有正在执行任务的线程。</p>
+<p>只要调用了这两个关闭方法中的任意一个，isShutdown方法就会返回true。当所有的任务都已关闭后，才表示线程池关闭成功，这时调用isTerminaed方法会返回true。至于应该调用哪一种方法来关闭线程池，应该由提交到线程池的任务特性决定，通常调用shutdown方法来关闭线程池，如果任务不一定要执行完，则可以调用shutdownNow方法。</p>
+<h5 id="合理地配置线程池"><a href="#合理地配置线程池" class="headerlink" title="合理地配置线程池"></a>合理地配置线程池</h5><p>要想合理地配置线程池，就必须首先分析任务特性，性质不同的任务可以用不同规模的线程池分开处理。CPU密集型任务应配置尽可能小的线程，如配置Ncpu+1个线程的线程池。由于IO密集型任务线程并不是一直在执行任务，则应配置尽可能多的线程，如2*Ncpu。混合型的任务，如果可以拆分，将其拆分成一个CPU密集型任务和一个IO密集型任务，只要这两个任务执行的时间相差不是太大，那么分解后执行的吞吐量将高于串行执行的吞吐量。如果这两个任务执行时间相差太大，则没必要进行分解。</p>
+<p>优先级不同的任务可以使用优先级队列PriorityBlockingQueue来处理。它可以让优先级高的任务先执行。执行时间不同的任务可以交给不同规模的线程池来处理，或者可以使用优先级队列，让执行时间短的任务先执行。依赖数据库连接池的任务，因为线程提交SQL后需要等待数据库返回结果，等待的时间越长，则CPU空闲时间就越长，那么线程数应该设置得越大，这样才能更好地利用CPU。</p>
+<p>建议使用有界队列。有界队列能增加系统的稳定性和预警能力，可以根据需要设大一点儿，比如几千。如果使用无界队列，当线程池中线程由于某种原因不可用时，会无限的添加线程，有可能导致OOM。</p>
+<h5 id="线程池的监控"><a href="#线程池的监控" class="headerlink" title="线程池的监控"></a>线程池的监控</h5><p>如果在系统中大量使用线程池，则有必要对线程池进行监控，方便在出现问题时，可以根据线程池的使用状况快速定位问题。可以通过线程池提供的参数进行监控，在监控线程池的时候可以使用以下属性。</p>
+<ul>
+<li>taskCount：线程池需要执行的任务数量。</li>
+<li>completedTaskCount：线程池在运行过程中已完成的任务数量，小于或等于taskCount。</li>
+<li>largestPoolSize：线程池里曾经创建过的最大线程数量。通过这个数据可以知道线程池是否曾经满过。如该数值等于线程池的最大大小，则表示线程池曾经满过。</li>
+<li>getPoolSize：线程池的线程数量。如果线程池不销毁的话，线程池里的线程不会自动销毁，所以这个大小只增不减。</li>
+<li>getActiveCount：获取活动的线程数。</li>
+</ul>
+<p>通过扩展线程池进行监控。可以通过继承线程池来自定义线程池，重写线程池的beforeExecute、afterExecute和terminated方法，也可以在任务执行前、执行后和线程池关闭前执行一些代码来进行监控。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/16/Java并发编程的艺术04/" rel="next" title="Java并发编程的艺术04">
+                <i class="fa fa-chevron-left"></i> Java并发编程的艺术04
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/17/Java并发编程的艺术06/" rel="prev" title="Java并发编程的艺术06">
+                Java并发编程的艺术06 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#原子操作类"><span class="nav-number">1.</span> <span class="nav-text">原子操作类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">2.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CyclicBarrier"><span class="nav-number">3.</span> <span class="nav-text">CyclicBarrier</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CyclicBarrier和CountDownLatch的区别"><span class="nav-number">3.1.</span> <span class="nav-text">CyclicBarrier和CountDownLatch的区别</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Semaphore"><span class="nav-number">4.</span> <span class="nav-text">Semaphore</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Exchanger"><span class="nav-number">5.</span> <span class="nav-text">Exchanger</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程池"><span class="nav-number">6.</span> <span class="nav-text">线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实现原理"><span class="nav-number">6.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#线程池的创建"><span class="nav-number">6.2.</span> <span class="nav-text">线程池的创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#向线程池提交任务"><span class="nav-number">6.3.</span> <span class="nav-text">向线程池提交任务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关闭线程池"><span class="nav-number">6.4.</span> <span class="nav-text">关闭线程池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#合理地配置线程池"><span class="nav-number">6.5.</span> <span class="nav-text">合理地配置线程池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#线程池的监控"><span class="nav-number">6.6.</span> <span class="nav-text">线程池的监控</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

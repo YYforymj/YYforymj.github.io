@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="jdk 源码阅读简单记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jdk源码阅读01">
+<meta property="og:url" content="http://yoursite.com/2018/10/23/jdk源码阅读01/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="jdk 源码阅读简单记录。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-08T06:31:11.941Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jdk源码阅读01">
+<meta name="twitter:description" content="jdk 源码阅读简单记录。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/23/jdk源码阅读01/">
+
+
+
+
+
+  <title>jdk源码阅读01 | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/23/jdk源码阅读01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jdk源码阅读01</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-23T20:55:17+08:00">
+                2018-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jdk/" itemprop="url" rel="index">
+                    <span itemprop="name">jdk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>jdk 源码阅读简单记录。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="java-lang"><a href="#java-lang" class="headerlink" title="java.lang"></a>java.lang</h3><h4 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h4><p>Object 是所有类的父类，所以从它看起吧（idea 支持查看当前窗口类所有的方法，alt + 7 即可唤出）。</p>
+<p>首先看静态方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private static native void registerNatives();</span><br><span class="line">static &#123;</span><br><span class="line">registerNatives();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的代码涉及到 c++ 部分的代码，不是重点，简单看了下 c++ 实现，大概就是将 Object 类的方法在 c++ 中注册一下（暂且这么理解，其实底层应该是函数指针的传递）；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public native int hashCode();</span><br></pre></td></tr></table></figure>
+<p>获取 hashcode，注释表明了该函数的一些特性：</p>
+<ul>
+<li>在同一个 jvm 中，对于同一对象调用 hashCode() 方法总会返回相同的哈希值</li>
+<li>两个不同的对象有可能返回相同的哈希值，但是为了提高 hash table 的性能最好控制使之产生不同哈希值</li>
+</ul>
+<p>简单看了下 cpp 文件，对于同一个对象，首次计算哈希值后即存储起来再次获取哈希值时会直接返回已经生成的哈希值；而 cpp 中在计算哈希值时有一项用于计算哈希值的 _hashStateX 属性，每次计算哈希值会调用 random 函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public boolean equals(Object obj) &#123;</span><br><span class="line">       return (this == obj);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>对于 equals() 方法，注释写的很明白，如果需要覆盖 equals() 方法，则需要同时重写 hashCode() 方法，保证相同对象拥有相同的哈希值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected native Object clone() throws CloneNotSupportedException;</span><br></pre></td></tr></table></figure>
+<p>clone 方法是 native 方法，所以执行效率与 java 方法比较起来会高一些，但是最大的问题是需要实现类继承 Cloneable 接口，否则会报 CloneNotSupportedException 异常，这对于单继承的 java 来说不是特别友好，同时又有浅拷贝的问题（可以参见<a href="https://blog.csdn.net/zhangjg_blog/article/details/18369201" target="_blank" rel="noopener">这里</a>），所以平时用的不多。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public String toString() &#123;</span><br><span class="line">        return getClass().getName() + &quot;@&quot; + Integer.toHexString(hashCode());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>对于没有重写 toString() 的类，Object 提供了基本的 toString() 方法，不过个人更习惯使用 lombok，方便简洁。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final native void notify();</span><br></pre></td></tr></table></figure>
+<p>从阻塞在该对象的线程中唤醒一个线程，唤醒的线程视具体不同的实现会有随机的唤醒；唤醒后线程处于等待状态，同其他等待线程具有相同的获取锁的优先级。notifyAll() 则是唤醒所有阻塞在该对象上的线程。</p>
+<p>此外，Object 类还有 wait() 的三个方法。wait() 方法的作用是让当前持有锁的线程放弃锁进入等待队列，并进行等待，直至其他方法调用 notify() 或 notifyAll() 唤醒该线程，则该线程继续执行。对于有参数的两个 wait() 方法，参数用于指定超时时间。需要注意的是，由于 wait() 方法会放弃 monitor，所以对于 wait() 的调用线程必须持有 monitor。</p>
+<h4 id="String"><a href="#String" class="headerlink" title="String"></a>String</h4><p>String 类是被 final 修饰的，所以 String 具有<strong>不可变性</strong>；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/** The value is used for character storage. */</span><br><span class="line">private final char value[];</span><br><span class="line"></span><br><span class="line">/** Cache the hash code for the string */</span><br><span class="line">private int hash; // Default to 0</span><br></pre></td></tr></table></figure>
+<p>两个主要类成员，其中字符数组 value[] 用于存储字符串信息；hash 用于缓存哈希值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public String(String original) &#123;</span><br><span class="line">        this.value = original.value;</span><br><span class="line">        this.hash = original.hash;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>String 的第一个含参构造方法，注释上表示，该构造方法会拷贝一份传入参数，生成一个新的对象。也就是说，如下语句会产生两个对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String str = new String(&quot;abc&quot;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public String(byte bytes[], String charsetName)</span><br><span class="line">            throws UnsupportedEncodingException &#123;</span><br><span class="line">        this(bytes, 0, bytes.length, charsetName);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>用于获取指定编码格式的 String 对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public String(StringBuffer buffer) &#123;</span><br><span class="line">    synchronized(buffer) &#123;</span><br><span class="line">    this.value = Arrays.copyOf(buffer.getValue(), buffer.length());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此构造方法用于将 StringBuffer 转换为，可以看出其实就是对字符数组的操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public int hashCode() &#123;</span><br><span class="line">    int h = hash;</span><br><span class="line">    if (h == 0 &amp;&amp; value.length &gt; 0) &#123;</span><br><span class="line">    	char val[] = value;</span><br><span class="line">    	for (int i = 0; i &lt; value.length; i++) &#123;</span><br><span class="line">    		h = 31 * h + val[i];</span><br><span class="line">    	&#125;</span><br><span class="line">    	hash = h;</span><br><span class="line">    &#125;</span><br><span class="line">    return h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>String 类的 hash 函数，计算公式为 s[0]<em>31^(n-1) + s[1]</em>31^(n-2) + … + s[n-1]。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public String concat(String str) &#123;</span><br><span class="line">        int otherLen = str.length();</span><br><span class="line">        if (otherLen == 0) &#123;</span><br><span class="line">            return this;</span><br><span class="line">        &#125;</span><br><span class="line">        int len = value.length;</span><br><span class="line">        char buf[] = Arrays.copyOf(value, len + otherLen);</span><br><span class="line">        str.getChars(buf, len);</span><br><span class="line">        return new String(buf, true);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>concat() 方法用于在字符串尾部添加字符串，源码中可以看出，依旧是对数组的操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public String trim() &#123;</span><br><span class="line">        int len = value.length;</span><br><span class="line">        int st = 0;</span><br><span class="line">        char[] val = value;    /* avoid getfield opcode */</span><br><span class="line"></span><br><span class="line">        while ((st &lt; len) &amp;&amp; (val[st] &lt;= &apos; &apos;)) &#123;</span><br><span class="line">            st++;</span><br><span class="line">        &#125;</span><br><span class="line">        while ((st &lt; len) &amp;&amp; (val[len - 1] &lt;= &apos; &apos;)) &#123;</span><br><span class="line">            len--;</span><br><span class="line">        &#125;</span><br><span class="line">        return ((st &gt; 0) || (len &lt; value.length)) ? substring(st, len) : this;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>trim() 方法通常是用来去除空格的，但是这里通过源码可以得知其实去除的不仅仅是空格，控制字符也一并去掉了（ascii 表中小于空格值的字符都是控制字符，例如换行符制表符等，详细可以查询 ascii 表）。对此进行如下实验：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot;\n test \t&quot;;</span><br><span class="line">System.out.println(str.length());</span><br><span class="line">System.out.println(str.trim().length());</span><br></pre></td></tr></table></figure>
+<p>输出结果为 8 ，4。证明去除了换行符与制表符。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) &#123;</span><br><span class="line">        if (srcBegin &lt; 0) &#123;</span><br><span class="line">            throw new StringIndexOutOfBoundsException(srcBegin);</span><br><span class="line">        &#125;</span><br><span class="line">        if (srcEnd &gt; value.length) &#123;</span><br><span class="line">            throw new StringIndexOutOfBoundsException(srcEnd);</span><br><span class="line">        &#125;</span><br><span class="line">        if (srcBegin &gt; srcEnd) &#123;</span><br><span class="line">            throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);</span><br><span class="line">        &#125;</span><br><span class="line">        System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数用于拷贝字符数组，后面 StringBuilder 会用到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public native String intern();</span><br></pre></td></tr></table></figure>
+<p>intern() 方法是 String 类的最后一个方法，也是最有趣的一个。注释表明，String 类在 jvm 启动后维护了一个字符串常量池，调用 intern() 方法后，如果常量池中有该字符串，则返回常量池中的对象，否则添加该对象到常量池中。此外，<strong>所有的 Literal String （就是以引号包裹的字符串，例如 String s = “abc” 中，”abc” 就是一个 Literal String）与字符串常量都存储在常量池中</strong>。</p>
+<h4 id="AbstractStringBuilder"><a href="#AbstractStringBuilder" class="headerlink" title="AbstractStringBuilder"></a>AbstractStringBuilder</h4><p>AbstractStringBuilder 是 StringBuilder 与 StringBuffer 的父类本身被定义为抽象类，有一些 StringBuilder 与 StringBuffer 公用的方法。同 String 一样，本身使用字符串数组作为内容存储的容器，有如下两个成员：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* The value is used for character storage.</span><br><span class="line">*/</span><br><span class="line">char[] value;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* The count is the number of characters used.</span><br><span class="line">*/</span><br><span class="line">int count;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void ensureCapacityInternal(int minimumCapacity) &#123;</span><br><span class="line">        // overflow-conscious code</span><br><span class="line">        if (minimumCapacity - value.length &gt; 0) &#123;</span><br><span class="line">            value = Arrays.copyOf(value,</span><br><span class="line">                    newCapacity(minimumCapacity));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>ensureCapacityInternal() 用于为当前对象扩容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public AbstractStringBuilder append(String str) &#123;</span><br><span class="line">        if (str == null)</span><br><span class="line">            return appendNull();</span><br><span class="line">        int len = str.length();</span><br><span class="line">        ensureCapacityInternal(count + len);</span><br><span class="line">        str.getChars(0, len, value, count);</span><br><span class="line">        count += len;</span><br><span class="line">        return this;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>append(String str) 大概是其中最常用的方法，通过源码可以看出，首先判断追加字符串是否为空，如果为空的话在最后添加 “null” 四个字符（这里比较奇怪，类的注释上说明了该类的任何方法接受到 null 会抛出 NullPointerException）；否则，首先对字符数组进行扩容，然后复制字符数据并为长度数据赋值完成追加。（另：在 CharSequence 接口中发现 jdk 1.8 的特性：interface 可以包含有方法体的方法，由此可见 java 最初的单继承设计是比较糟糕的）</p>
+<h4 id="StringBuffer、StringBuilder"><a href="#StringBuffer、StringBuilder" class="headerlink" title="StringBuffer、StringBuilder"></a>StringBuffer、StringBuilder</h4><p>注释标明了这两个类的功能几乎是一样的，除了 StringBuffer 是线程安全的，而 StringBuilder 是非线程安全的。而这两个类的最常用的方法就是 append() 与 insert() 了，这里不赘述。</p>
+<h4 id="Boolean"><a href="#Boolean" class="headerlink" title="Boolean"></a>Boolean</h4><p>没什么好说的，boolean 的包装类，可以从 String 中解析布尔值。</p>
+<h4 id="Byte"><a href="#Byte" class="headerlink" title="Byte"></a>Byte</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* A constant holding the minimum value a &#123;@code byte&#125; can</span><br><span class="line">* have, -2&lt;sup&gt;7&lt;/sup&gt;.</span><br><span class="line">*/</span><br><span class="line">public static final byte   MIN_VALUE = -128;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* A constant holding the maximum value a &#123;@code byte&#125; can</span><br><span class="line">* have, 2&lt;sup&gt;7&lt;/sup&gt;-1.</span><br><span class="line">*/</span><br><span class="line">public static final byte   MAX_VALUE = 127;</span><br></pre></td></tr></table></figure>
+<p>同 byte 一样有上下限。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private static class ByteCache &#123;</span><br><span class="line">        private ByteCache()&#123;&#125;</span><br><span class="line"></span><br><span class="line">        static final Byte cache[] = new Byte[-(-128) + 127 + 1];</span><br><span class="line"></span><br><span class="line">        static &#123;</span><br><span class="line">            for(int i = 0; i &lt; cache.length; i++)</span><br><span class="line">                cache[i] = new Byte((byte)(i - 128));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Byte valueOf(byte b) &#123;</span><br><span class="line">        final int offset = 128;</span><br><span class="line">        return ByteCache.cache[(int)b + offset];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这两个方法表明了，Byte 类维护了一个对象池，该对象池中持有该类所有可能的取值，在调用 valueOf() 方法时，返回池中对应对象。</p>
+<p>此外同基本类型一样，Byte 的一些方法也是先转换为 int 或其包装类再进行处理。</p>
+<h4 id="Double-、Float"><a href="#Double-、Float" class="headerlink" title="Double 、Float"></a>Double 、Float</h4><p>这两个类比较类似，没有什么值得说的。</p>
+<h4 id="Integer"><a href="#Integer" class="headerlink" title="Integer"></a>Integer</h4><p>toString(int i, int radix) 方法按照 radix 指定的基数进行转换，用于将 Integer 对象转换为各个进制格式的字符串。当然也可以使用 toHexString(int i)、toOctalString(int i)、toBinaryString(int i) 等进行转换。</p>
+<p>public static Integer decode(String nm) 用于解析数字，可以接受十六进制（0x、0X、# 开头）或者八进制（0 开头）数字。</p>
+<p>同 Byte 一样，有缓存的对象池，代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">private static class IntegerCache &#123;</span><br><span class="line">        static final int low = -128;</span><br><span class="line">        static final int high;</span><br><span class="line">        static final Integer cache[];</span><br><span class="line"></span><br><span class="line">        static &#123;</span><br><span class="line">            // high value may be configured by property</span><br><span class="line">            int h = 127;</span><br><span class="line">            String integerCacheHighPropValue =</span><br><span class="line">                sun.misc.VM.getSavedProperty(&quot;java.lang.Integer.IntegerCache.high&quot;);</span><br><span class="line">            if (integerCacheHighPropValue != null) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    int i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                    i = Math.max(i, 127);</span><br><span class="line">                    // Maximum array size is Integer.MAX_VALUE</span><br><span class="line">                    h = Math.min(i, Integer.MAX_VALUE - (-low) -1);</span><br><span class="line">                &#125; catch( NumberFormatException nfe) &#123;</span><br><span class="line">                    // If the property cannot be parsed into an int, ignore it.</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            high = h;</span><br><span class="line"></span><br><span class="line">            cache = new Integer[(high - low) + 1];</span><br><span class="line">            int j = low;</span><br><span class="line">            for(int k = 0; k &lt; cache.length; k++)</span><br><span class="line">                cache[k] = new Integer(j++);</span><br><span class="line"></span><br><span class="line">            // range [-128, 127] must be interned (JLS7 5.1.7)</span><br><span class="line">            assert IntegerCache.high &gt;= 127;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private IntegerCache() &#123;&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>其中对象池上限可以通过 jvm 的设置  -XX:AutoBoxCacheMax=<size> 来设定。</size></p>
+<h4 id="Long"><a href="#Long" class="headerlink" title="Long"></a>Long</h4><p>同 Byte 一样有对象池，范围也是 -128 ~ 127，不可以设定上下限。</p>
+<h4 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h4><p>每个Thread维护着一个ThreadLocalMap的引用，ThreadLocalMap是ThreadLocal的内部类，用Entry来进行存储。调用ThreadLocal的set()方法时，实际上就是往ThreadLocalMap设置值，key是ThreadLocal对象，值是传递进来的对象。调用ThreadLocal的get()方法时，实际上就是往ThreadLocalMap获取值，key是ThreadLocal对象，ThreadLocal本身并不存储值，它只是作为一个key来让线程从ThreadLocalMap获取value。</p>
+<h4 id="Class"><a href="#Class" class="headerlink" title="Class"></a>Class</h4><p>注释表明，枚举是一种类，注解是一种接口；而接口也可以通过 Class 类进行判断。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/23/mysql数据库拾遗01/" rel="next" title="mysql数据库拾遗01">
+                <i class="fa fa-chevron-left"></i> mysql数据库拾遗01
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/08/jdk源码阅读02/" rel="prev" title="jdk源码阅读02">
+                jdk源码阅读02 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-lang"><span class="nav-number">1.</span> <span class="nav-text">java.lang</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Object"><span class="nav-number">1.1.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String"><span class="nav-number">1.2.</span> <span class="nav-text">String</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AbstractStringBuilder"><span class="nav-number">1.3.</span> <span class="nav-text">AbstractStringBuilder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#StringBuffer、StringBuilder"><span class="nav-number">1.4.</span> <span class="nav-text">StringBuffer、StringBuilder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Boolean"><span class="nav-number">1.5.</span> <span class="nav-text">Boolean</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Byte"><span class="nav-number">1.6.</span> <span class="nav-text">Byte</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Double-、Float"><span class="nav-number">1.7.</span> <span class="nav-text">Double 、Float</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Integer"><span class="nav-number">1.8.</span> <span class="nav-text">Integer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Long"><span class="nav-number">1.9.</span> <span class="nav-text">Long</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ThreadLocal"><span class="nav-number">1.10.</span> <span class="nav-text">ThreadLocal</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Class"><span class="nav-number">1.11.</span> <span class="nav-text">Class</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
