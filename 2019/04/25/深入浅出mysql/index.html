@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="以下内容为传智博客的《java基础入门》一书的读书笔记">
+<meta name="description" content="以下为深入浅出mysql一书的读书笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java基础01">
-<meta property="og:url" content="http://yoursite.com/2017/03/10/java01/index.html">
+<meta property="og:title" content="深入浅出mysql">
+<meta property="og:url" content="http://yoursite.com/2019/04/25/深入浅出mysql/index.html">
 <meta property="og:site_name" content="Yuyublog">
-<meta property="og:description" content="以下内容为传智博客的《java基础入门》一书的读书笔记">
+<meta property="og:description" content="以下为深入浅出mysql一书的读书笔记">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-08T06:31:11.924Z">
+<meta property="og:updated_time" content="2019-04-25T02:54:25.103Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java基础01">
-<meta name="twitter:description" content="以下内容为传智博客的《java基础入门》一书的读书笔记">
+<meta name="twitter:title" content="深入浅出mysql">
+<meta name="twitter:description" content="以下为深入浅出mysql一书的读书笔记">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/10/java01/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/25/深入浅出mysql/">
 
 
 
 
 
-  <title>java基础01 | Yuyublog</title>
+  <title>深入浅出mysql | Yuyublog</title>
   
 
 
@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/10/java01/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/25/深入浅出mysql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yu yu">
@@ -269,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">java基础01</h1>
+          <h1 class="post-title" itemprop="name headline">深入浅出mysql</h1>
         
 
         <div class="post-meta">
@@ -281,8 +281,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-10T11:08:36+08:00">
-                2017-03-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-25T10:23:17+08:00">
+                2019-04-25
               </time>
             
 
@@ -304,8 +304,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
                   </a>
                 </span>
 
@@ -342,82 +342,101 @@
 
       
         <blockquote>
-<p>以下内容为传智博客的《java基础入门》一书的读书笔记</p>
+<p>以下为深入浅出mysql一书的读书笔记</p>
 </blockquote>
 <a id="more"></a>
-<h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ul>
-<li>命令行下使用java命令运行时只需输入类名，无需输入class</li>
-</ul>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><ul>
-<li>标识符：由字母数字下划线或美元符号组成，且不能由数字开头</li>
-<li>命名规范：</li>
-</ul>
 <ol>
-<li>包名一律小写</li>
-<li>类、接口每个单词首字母大写（大驼峰命名法）</li>
-<li>常亮以final修饰，且所有字母大写</li>
-<li>变量或方法首单词首字母小写，其余单词首字母大写（小驼峰命名法）</li>
+<li>每个MyISAM在磁盘上存储成三个文件。文件名都和表名相同，扩展名分别是.frm （存储表定义）、 .MYD (MYData，存储数据)、 .MYI (MYIndex，存储索引)。数据文件和索引文件可以放置在不同的目录，平均分布io，获得更快的速度。</li>
 </ol>
-<ul>
-<li>进制标识</li>
-</ul>
-<ol>
-<li>二进制使用0b或0B开头</li>
-<li>八进制使用0开头</li>
-<li>十六进制使用0x或0X开头</li>
-</ol>
-<ul>
-<li>数据类型</li>
-</ul>
-<ol>
-<li>八种基本数据类型，传递参数时为值传递；</li>
-<li>引用数据类型：类，接口，数组，枚举，注解等，传递参数时为引用传递</li>
-</ol>
-<ul>
-<li>八种基本数据类型<br>整型数据（默认值0）</li>
-</ul>
-<ol>
-<li>byte 1个字节，8位0/1</li>
-<li>short 2个字节</li>
-<li>int 4个字节（其他整型数据进行运算时会先转换为int后在进行计算）</li>
-<li>long 8个字节（赋值时数字后要加L，例子： long num = 2000L;）<br>浮点数类型（默认值0）</li>
-<li>float 4个字节（小数默认类型为double，赋值是数字后要加f，例子： float num = 1.234f;）</li>
-<li>double 8个字节<br>字符型（默认值‘\u0000’）<br>char 2个字节<br>布尔类型（默认值false）<br>boolean false为0，true为非0</li>
-</ol>
-<ul>
-<li>全局变量未被初始化时，jvm会为其设置默认值；局部变量不会设置默认值，故需要手动初始化，否则报错；</li>
-<li>+=符号运算时，原数据类型不会被jvm强转int或double而是保持原数据类型；</li>
-<li>>>>无符号右移运算符</li>
-<li>方法重载：以参数列表为准，参数列表不同即为重载（顺序不同也视为重载）</li>
-<li>冒泡排序：不断比较数组中相邻两个元素大小，每轮将最大者置于此轮最后位置<br>例子：<br>排序前 9 8 3 5 2<br>第一轮 8 3 5 2 9<br>第二轮 3 5 2 8 9<br>第三轮 3 2 5 8 9<br>第四轮 2 3 5 8 9</li>
-<li>取模运算结果的符号取决于被模数，例子：（-5）%3=-2，5%（-3）=2；</li>
-<li>&amp;与&amp;&amp;区别：使用&amp;运算时，无论左边结果是true或false，右边表达式都会运算；使用&amp;&amp;表达式当左边为false时，右边不再运算</li>
-</ul>
-<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ul>
-<li>面向对象特点：封装、继承、多态</li>
-<li>全局变量，也叫成员变量，在整个类中有效</li>
-<li>构造方法要满足3个条件：</li>
-</ul>
-<ol>
-<li>与类名相同</li>
-<li>无返回值类型声明</li>
-<li>不可以有返回值<br>（注：一个类中如果定义有有参构造方法，则无参构造方法需要重新定义）</li>
-</ol>
-<ul>
-<li>类方法：由static修饰的方法，可以由类直接调用；实例方法：需对类实例化，利用对象调用</li>
-<li>单例模式：分为饿汉式与懒汉式</li>
-</ul>
-<ol>
-<li><p>饿汉式：一但创建类立即构建实例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123; </span><br><span class="line">    private static Singleton singleton = new Singleton(); </span><br><span class="line">    private Singleton()&#123;&#125; </span><br><span class="line">    public static Singleton getInstance()&#123; </span><br><span class="line">        return singleton; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>InnoDB存储引擎提供了具有提交、 回滚和崩溃恢复能力的事务安全。 但是对比Myisam的存储引擎， InnoDB写的处理效率差一些并且会占用更多的磁盘空间以保留数据和索引。</p>
 </li>
-<li><p>懒汉式：创建类后不立即构建实例，被调用时才构建实例</p>
+<li><p>varchar数据类型</p>
+<p>对于InnoDB数据表，内部的行存储格式没有区分固定长度和可变长度列（所有数据行都使用指向数据列值的头指针） ，因此在本质上，使用固定长度的 CHAR列不一定比使用可变长度VARCHAR列简单。 因而， 主要的性能因素是数据行使用的存储总量。 由于CHAR平均占用的空间多于VARCHAR， 因 此使用VARCHAR来最小化需要处理的数据行的存储总量和磁盘I/O是比较好的。</p>
+</li>
+<li><p>字符集：Mysql的字符集包括字符集（ CHARACTER）和校对规则（ COLLATION）两个概念。字符集是用来定义mysql存储字符串的方式，校对规则则是定义了比较字符串的方式。字符集和校对规则有4个级别的默认设置：服务器级、数据库级、表级和字段级。分别在不同的地方设置，作用也不相同。</p>
+</li>
+<li><p>索引的设计与使用</p>
+<ul>
+<li><p>使用短索引。 如果对串列进行索引， 应该指定一个前缀长度， 只要有可能就应该这样做。例如，如果有一个CHAR(200) 列，如果在前10 个或20 个字符内，多数值是惟一的，那么就不要对整个列进行索引。对前10 个或20 个字符进行索引能够节省大量索引空间，也可能会使查询更快。较小的索引涉及的磁盘I/O 较少，较短的值比较起来更快。更为重要的是， 对于较短的键值， 索引高速缓存中的块能容纳更多的键值， 因此， MySQL也可以在内存中容纳更多的值。这增加 了找到行而不用读取索引中较多块的可能性。（当然， 应该利用一些常识。 如仅用列值的第一个字符进行索引是不可能有多大好处的，因为这个索引中不会有许多不 同的值。 </p>
+</li>
+<li><p>使用惟一索引。考虑某列中值的分布。对于惟一值的列，索引的效果最好，而具有多个重复值的列，其索引效果最差。</p>
+</li>
+<li><p>用最左前缀。在创建一个n 列的索引时，实际是创建了MySQL可利用的n 个索引。多列索引可起几个索引的作用， 因为可利用索引中最左边的列集来匹配行。 这样的列集称为最左前缀。 </p>
+</li>
+</ul>
+</li>
+<li><p>事务控制</p>
+<ul>
+<li><p>MySQL通过SET AUTOCOMMIT, START TRANSACTION, COMMIT和ROLLBACK等语句支持本地事务。语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">START TRANSACTION | BEGIN [WORK]</span><br><span class="line">  COMMIT [WORK] [AND [NO] CHAIN] [[NO] RELEASE]</span><br><span class="line">  ROLLBACK [WORK] [AND [NO] CHAIN] [[NO] RELEASE]</span><br><span class="line">  SET AUTOCOMMIT = &#123;0 | 1&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123; </span><br><span class="line">    private static Singleton singleton; </span><br><span class="line">    private Singleton()&#123;&#125; </span><br><span class="line"> </span><br><span class="line">    public static synchronized Singleton getInstance()&#123; </span><br><span class="line">        if(singleton==null)&#123; </span><br><span class="line">            singleton = new Singleton(); </span><br><span class="line">        &#125; </span><br><span class="line">        return singleton; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>this调用构造方法，只能在构造方法中使用，不可以在成员方法中使用，且调用this的语句必须放在第一行</li>
+<li><p>默认情况下， mysql是autocommit的，如果需要通过明确的commit和rollback来提交和回滚事务， 那么需要通过明确的事务控制命令来开始事务。</p>
+<p>同一个事务中，最好不使用不同存储引擎的表，否则rollback时需要对非事务类型的表进行特别的处理，因为commit、 rollback只能对事务类型的表进行提交和回滚。通常情况下， 只对提交的事务纪录到二进制的日志中， 但是如果一个事务中包含非事务类型的表， 那么回滚操作也会被记录到二进制日志中， 以确保非事务类型表的更新可以被复制到从的数据库中 。</p>
+<p>事务中可以通过定义savepoint，指定回滚事务的一个部分，但是不能指定提交事务的一个部分。对于复杂的应用，可以定义多个不同的savepoint，满足不同的条件时，回滚不同的savepoint。需要注意的是，如果定义了相同名字的savepoint，则后面定义的savepoint会覆盖之前的定义。 对于不再需要使用的savepoint， 可以通过release savepoint命令删除savepoint，删除后的savepoint，不能再执行rollback to savepoint命令。</p>
+</li>
+<li><p>注意问题：在MySQL中， 数据库对应数据目录中的目录。 数据库中的每个表至少对应数据库目录中的一个文件(也可能是多个，取决于存储引擎)。因此，所使用操作系统的大小写敏感性决定了数据库名和表名的大小写敏感性。如果你正使用InnoDB表，在任何平台上均应将lower_case_tables_name设置为1，以强制将名转换为小写。</p>
+</li>
 </ul>
+<ol start="7">
+<li><p>sql优化</p>
+<ul>
+<li><p>SHOW STATUS可以提供服务器状态信息。以下几个参数对Myisam和Innodb存储引擎都计数：</p>
+<ul>
+<li><p>Com_select 执行select操作的次数，一次查询只累加1；</p>
+</li>
+<li><p>Com_insert 执行insert操作的次数， 对于批量插入的insert操作， 只累加一次；</p>
+</li>
+<li><p>Com_update 执行update操作的次数；</p>
+</li>
+<li><p>Com_delete 执行delete操作的次数；</p>
+</li>
+</ul>
+</li>
+<li><p>以下几个参数是针对Innodb存储引擎计数的，累加的算法也略有不同：</p>
+<ul>
+<li><p>Innodb_rows_read select查询返回的行数；</p>
+</li>
+<li><p>Innodb_rows_inserted执行Insert操作插入的行数；</p>
+</li>
+<li><p>Innodb_rows_updated 执行update操作更新的行数；</p>
+</li>
+<li><p>Innodb_rows_deleted 执行delete操作删除的行数；</p>
+</li>
+</ul>
+<p>通过以上几个参数， 可以很容易的了解当前数据库的应用是以插入更新为主还是以查询操作为主， 以及各种类型的SQL大致的执行比例是多少。 对于更新操作的计数，是对执行次数的计数，不论提交还是回滚都会累加。</p>
+<p>对于事务型的应用， 通过Com_commit和Com_rollback可以了解事务提交和回滚的情况，对于回滚操作非常频繁的数据库，可能意味着应用编写存在问题。</p>
+</li>
+</ul>
+</li>
+<li><p>可以通过以下两种方式定位执行效率较低的SQL语句。</p>
+<ul>
+<li><p>可以通过慢查询日志定位那些执行效率较低的sql语句，用–log-slowqueries[=file_name]选项启动时， mysqld写一个包含所有执行时间超过long_query_time秒的SQL语句的日志文件。可以链接到管理维护中的相关章节。</p>
+</li>
+<li><p>慢查询日志在查询结束以后才纪录， 所以在应用反映执行效率出现问题的时候查询慢查询日志并不能定位问题，可以使用show processlist命令查看当前MySQL在进行的线程，包括线程的状态，是否锁表等等，可以实时的查看SQL执行情况， 同时对一些锁表操作进行优化。</p>
+</li>
+<li><p>一些情况下， 子查询可以被更有效率的连接(JOIN)替代。</p>
+</li>
+</ul>
+</li>
+<li><p>假设我们要将所有没有订单记录的用户取出来，可以用下面这个查询完成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM customerinfo WHERE CustomerID NOT in (SELECT CustomerID FROM salesinfo )</span><br></pre></td></tr></table></figure>
+<p>如果使用连接(JOIN).. 来完成这个查询工作， 速度将会快很多。 尤其是当salesinfo 表中对CustomerID建有索引的话，性能将会更好，查询如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM customerinfo LEFT JOIN salesinfo ON customerinfo.CustomerID=salesinfo.CustomerID WHERE salesinfo.CustomerID IS NULL</span><br></pre></td></tr></table></figure>
+<p>连接(JOIN).. 之所以更有效率一些，是因为 MySQL不需要在内存中创建临时表。</p>
+</li>
+<li><p>负载均衡</p>
+<p>mysql的主从复制可以有效的分流更新操作和查询操作，具体的实现是一个主服务器，承担更新操作，多台从服务器，承担查询操作，主从之间通过复制实现数据的同步。多台从服务器一方面用来确保可用性，一方面可以创建不同的索引满足不同查询的需要。</p>
+</li>
+<li><p>binlog</p>
+<p>记录内容：二进制日志包含了所有更新了数据或者已经潜在更新了数据（例如，没有匹配任何行的一个DELETE）的所有语句。语句以“ 事件” 的形式保存，它描述数据更改文件位置和格式：当用–log-bin[=file_name]选项启动时， mysqld写入包含所有更新数据的SQL命令的日志文件。如果未给出file_name值， 默认名为-bin后面所跟的主机名。如果给出了文件名，但没有包含路径，则文件被写入数据目录。</p>
+</li>
+</ol>
+<p>​    </p>
 
       
     </div>
@@ -442,15 +461,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/04/12/git04/" rel="next" title="GIT04">
+                <i class="fa fa-chevron-left"></i> GIT04
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/01/java02/" rel="prev" title="java基础02">
-                java基础02 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -502,17 +521,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -565,22 +575,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一章"><span class="nav-number">1.</span> <span class="nav-text">第一章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二章"><span class="nav-number">2.</span> <span class="nav-text">第二章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章"><span class="nav-number">3.</span> <span class="nav-text">第三章</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
