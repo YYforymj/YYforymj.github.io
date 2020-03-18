@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="spring-session中对于servlet3.0标准中HttpSessionAttributeListener监听器没有支持，所以如果想要监听spring-session中session属性的变化就需要自己编码处理，经上网查阅资料与源码，问题得以解决。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring-session没有HttpSessionAttributeListener的解决办法">
+<meta property="og:url" content="http://yoursite.com/2020/03/18/spring-session没有HttpSessionAttributeListener的解决办法/index.html">
+<meta property="og:site_name" content="Yuyublog">
+<meta property="og:description" content="spring-session中对于servlet3.0标准中HttpSessionAttributeListener监听器没有支持，所以如果想要监听spring-session中session属性的变化就需要自己编码处理，经上网查阅资料与源码，问题得以解决。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-18T02:09:40.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring-session没有HttpSessionAttributeListener的解决办法">
+<meta name="twitter:description" content="spring-session中对于servlet3.0标准中HttpSessionAttributeListener监听器没有支持，所以如果想要监听spring-session中session属性的变化就需要自己编码处理，经上网查阅资料与源码，问题得以解决。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/18/spring-session没有HttpSessionAttributeListener的解决办法/">
+
+
+
+
+
+  <title>spring-session没有HttpSessionAttributeListener的解决办法 | Yuyublog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuyublog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/18/spring-session没有HttpSessionAttributeListener的解决办法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yu yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/blog/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuyublog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">spring-session没有HttpSessionAttributeListener的解决办法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-18T08:54:51+08:00">
+                2020-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/miscellaneous/" itemprop="url" rel="index">
+                    <span itemprop="name">miscellaneous</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>spring-session中对于servlet3.0标准中<code>HttpSessionAttributeListener</code>监听器没有支持，所以如果想要监听spring-session中session属性的变化就需要自己编码处理，经上网查阅资料与源码，问题得以解决。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><hr>
+<ul>
+<li>最近的项目需要统计登录session，但是现有的系统中，用户访问后创建的session不一定是登录的session，只有在session的属性中设置了指定的值才算作登录。servlet3.0中支持<code>HttpSessionAttributeListener</code>用来监听session属性的修改，但是蛋疼的是spring-session中对于servlet标准监听器只支持<code>HttpSessionListener</code>，所以得自己想办法解决。</li>
+</ul>
+<h3 id="问题剖析"><a href="#问题剖析" class="headerlink" title="问题剖析"></a>问题剖析</h3><hr>
+<ul>
+<li>spring-session的GitHub repository上有人提了<a href="https://github.com/spring-projects/spring-session/issues/5" target="_blank" rel="noopener">issue</a>，spring-session目前还不支持<code>HttpSessionAttributeListener</code>，通过网上对于spring-session源码解析的<a href="https://www.cnblogs.com/lxyit/p/9719542.html" target="_blank" rel="noopener">资料</a>，得知spring-session对于<code>HttpSessionListener</code>的处理是通过<code>redis</code>的<a href="https://redis.io/topics/notifications" target="_blank" rel="noopener">Redis Keyspace Notifications</a>功能实现的。为此，我们可以参考<code>HttpSessionListener</code>的实现逻辑，处理下session属性的监听。</li>
+<li><p>spring-session在创建session后，会持久化session到redis中，对于一个session，会创建3个redis的值，分别为：</p>
+<ul>
+<li><code>spring:session:sessions:+sessionId</code>：此值为hash，其中存储了session中的属性，还包括session的持续时长、上次访问时间以及创建时间</li>
+<li><code>spring:session:sessions:expires:+sessionId</code>：此key中没有值，主要是利用这个key的过期时间，确定session是否过期</li>
+<li><code>spring:session:expirations:+时间戳</code>：此值为set，其中存储了对应时间过期的sessionid，通过源码可以得知，此处所有的时间戳都是整分钟的时间戳，spring-session在处理时会先将session的过期时间取下一个最近的整分钟时间戳，并将sessionId存储到对应的set中。</li>
+</ul>
+</li>
+<li><p>spring-session中在操作<code>redis</code>时，主要是通过<code>RedisOperationsSessionRepository</code>这个类实现的，我们可以在业务代码中注入此类的对象，即可操作session。<code>RedisOperationsSessionRepository</code>中涉及到保存session到<code>redis</code>的方法是 save() 方法，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void save(RedisSession session) &#123;</span><br><span class="line">    session.saveDelta(); // 保存session到redis</span><br><span class="line">    if (session.isNew()) &#123; // session是新建的，需要通过pub/sub发布消息，触发httpSessionListener，不在本篇文章分析的范围内</span><br><span class="line">        String sessionCreatedKey = getSessionCreatedChannel(session.getId());</span><br><span class="line">        this.sessionRedisOperations.convertAndSend(sessionCreatedKey, session.delta);</span><br><span class="line">        session.setNew(false);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中最主要的就是 <code>session.saveDelta()</code> 方法，<code>RedisSession</code>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">	 * A custom implementation of &#123;@link Session&#125; that uses a &#123;@link MapSession&#125; as the</span><br><span class="line">	 * basis for its mapping. It keeps track of any attributes that have changed. When</span><br><span class="line">	 * &#123;@link org.springframework.session.data.redis.RedisOperationsSessionRepository.RedisSession#saveDelta()&#125;</span><br><span class="line">	 * is invoked all the attributes that have been changed will be persisted.</span><br><span class="line">	 *</span><br><span class="line">	 * @author Rob Winch</span><br><span class="line">	 * @since 1.0</span><br><span class="line">	 */</span><br><span class="line">	final class RedisSession implements Session &#123;</span><br><span class="line">		private final MapSession cached; // 内存中的session</span><br><span class="line">		private Instant originalLastAccessTime; // 上次访问时间</span><br><span class="line">		private Map&lt;String, Object&gt; delta = new HashMap&lt;&gt;(); // 更新的数据</span><br><span class="line">		private boolean isNew;// 是否发布过创建的消息</span><br><span class="line">		private String originalPrincipalName; </span><br><span class="line"></span><br><span class="line">		/**</span><br><span class="line">		 * Creates a new instance ensuring to mark all of the new attributes to be</span><br><span class="line">		 * persisted in the next save operation.</span><br><span class="line">		 */</span><br><span class="line">		RedisSession() &#123;</span><br><span class="line">			this(new MapSession());</span><br><span class="line">			// 新建session的时候会默认将创建时间、上次访问时间和session有效期添加到session</span><br><span class="line">			this.delta.put(CREATION_TIME_ATTR, getCreationTime().toEpochMilli());</span><br><span class="line">			this.delta.put(MAX_INACTIVE_ATTR, (int) getMaxInactiveInterval().getSeconds());</span><br><span class="line">			this.delta.put(LAST_ACCESSED_ATTR, getLastAccessedTime().toEpochMilli());</span><br><span class="line">			this.isNew = true;</span><br><span class="line">			this.flushImmediateIfNecessary();</span><br><span class="line">		&#125;</span><br><span class="line"> 		...</span><br><span class="line"> 		省略无关代码</span><br><span class="line"> 		...</span><br><span class="line"></span><br><span class="line">		/**</span><br><span class="line">		 * Saves any attributes that have been changed and updates the expiration of this</span><br><span class="line">		 * session.</span><br><span class="line">		 */</span><br><span class="line">		 // 保存session到redis的方法</span><br><span class="line">		private void saveDelta() &#123;</span><br><span class="line">			if (this.delta.isEmpty()) &#123;</span><br><span class="line">				return;</span><br><span class="line">			&#125;</span><br><span class="line">			String sessionId = getId();</span><br><span class="line">			// 此处为保存session属性，delta为更新的session信息</span><br><span class="line">			getSessionBoundHashOperations(sessionId).putAll(this.delta);</span><br><span class="line">			String principalSessionKey = getSessionAttrNameKey(</span><br><span class="line">			...</span><br><span class="line">			省略无关代码</span><br><span class="line">			...</span><br><span class="line">			this.delta = new HashMap&lt;&gt;(this.delta.size());</span><br><span class="line">			// 下面是更新过期时间的逻辑</span><br><span class="line">			Long originalExpiration = this.originalLastAccessTime == null ? null</span><br><span class="line">					: this.originalLastAccessTime.plus(getMaxInactiveInterval()).toEpochMilli();</span><br><span class="line">			RedisOperationsSessionRepository.this.expirationPolicy</span><br><span class="line">					.onExpirationUpdated(originalExpiration, this);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p><code>getSessionBoundHashOperations</code>方法代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private String keyPrefix = DEFAULT_SPRING_SESSION_REDIS_PREFIX;</span><br><span class="line">static final String DEFAULT_SPRING_SESSION_REDIS_PREFIX = &quot;spring:session:&quot;;</span><br><span class="line"></span><br><span class="line">private BoundHashOperations&lt;Object, Object, Object&gt; getSessionBoundHashOperations(</span><br><span class="line">			String sessionId) &#123;</span><br><span class="line">	// 此处拼装得到的就是spring:session:sessions:sessionId</span><br><span class="line">	String key = getSessionKey(sessionId); </span><br><span class="line">	// 操作redis中session对应的set，更新hashkey\hashvalue</span><br><span class="line">	return this.sessionRedisOperations.boundHashOps(key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">String getSessionKey(String sessionId) &#123;</span><br><span class="line">	return this.keyPrefix + &quot;sessions:&quot; + sessionId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，最终session属性变化的时候，会从<code>RedisSession</code>的cache的<code>MapSession</code>中将属性持久化到redis对应的set中。</p>
+</li>
+<li><p><code>redis</code>的<a href="https://redis.io/topics/notifications" target="_blank" rel="noopener">Redis Keyspace Notifications</a>，官网文档指出，此功能可以在redis的数据发生变化时，通过 Pub/Sub 将变动发布到对应的频道，可以用来监控数据的变化，例如</p>
+<ul>
+<li>订阅频道：<code>__keyspace@0__:mykey</code> 可以监控db0上的key为<code>mykey</code>的数据变化；</li>
+<li>订阅频道：<code>__keyspace@0__:del</code> 可以监控db0上的所有del命令操作的数据；</li>
+</ul>
+<p>如此一来便可以通过<code>Keyspace Notifications</code>订阅频道，获取session中属性的变化</p>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><hr>
+<ul>
+<li><p>整体的思路就是监听spring-session对应的<code>redis</code>的db的<code>hset</code>、<code>hdel</code>操作，当检测到向session中设置值时，即可触发对应的类，并调用需要调用的方法即可。以监听<code>hset</code>为例，具体代码如下：</p>
+</li>
+<li><p>在配置文件中增加redis监听配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 定义Spring Redis的序列化器 --&gt;</span><br><span class="line">    &lt;!-- String序列化 --&gt;</span><br><span class="line">    &lt;bean id=&quot;stringRedisSerializer&quot; class=&quot;org.springframework.data.redis.serializer.StringRedisSerializer&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 将监听实现类注册到spring容器中 --&gt;</span><br><span class="line">    &lt;bean id=&quot;dataSyncEventListener&quot; class=&quot;com.yuyu.listener.LoginAttributeListener&quot;/&gt;</span><br><span class="line">    &lt;!-- 注册监听器并引入监听实现类 --&gt;</span><br><span class="line">    &lt;bean id=&quot;messageListener&quot; class=&quot;org.springframework.data.redis.listener.adapter.MessageListenerAdapter&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;delegate&quot; ref=&quot;dataSyncEventListener&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;serializer&quot; ref=&quot;stringRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 消息监听 --&gt;</span><br><span class="line">    &lt;redis:listener-container&gt;</span><br><span class="line">        &lt;!--指定消息处理方法，序列化方式及主题名称--&gt;</span><br><span class="line">        &lt;redis:listener ref=&quot;messageListener&quot; method=&quot;onMessage&quot; serializer=&quot;stringRedisSerializer&quot; topic=&quot;__keyevent@0__:hset&quot;/&gt;</span><br><span class="line">	&lt;/redis:listener-container&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>增加<code>MessageListener</code>的实现类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class SessionAttributeListener implements MessageListener &#123;</span><br><span class="line">	// 注入session操作类</span><br><span class="line">    @Resource(name = &quot;sessionRepository&quot;)</span><br><span class="line">    private RedisOperationsSessionRepository sessionRepository;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 监听redis的hset操作，并判断是否是向session中写入属性</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(Message message, byte[] pattern) &#123;</span><br><span class="line">        if (message == null || message.getChannel() == null </span><br><span class="line">        	|| message.getBody() == null) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        // 获取频道发布的消息</span><br><span class="line">        String messageStr = new String(message.getBody());</span><br><span class="line">        // 向session中设置属性了</span><br><span class="line">        if(messageStr.startsWith(&quot;spring:session:sessions:&quot;))&#123;</span><br><span class="line">            // 获取sessionId</span><br><span class="line">            String sessionId = messageStr.substring(messageStr.lastIndexOf(&quot;:&quot;) + 1);</span><br><span class="line">            // 获取session</span><br><span class="line">			Session addAttributeSession = sessionRepository.getSession(sessionId);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/21/apache-http-client发起请求不携带cookie问题的解决/" rel="next" title="apache-http-client发起请求不携带cookie问题的解决">
+                <i class="fa fa-chevron-left"></i> apache-http-client发起请求不携带cookie问题的解决
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/blog/avatar.jpg" alt="Yu yu">
+            
+              <p class="site-author-name" itemprop="name">Yu yu</p>
+              <p class="site-description motion-element" itemprop="description">yuyublog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题剖析"><span class="nav-number">2.</span> <span class="nav-text">问题剖析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yu yu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
